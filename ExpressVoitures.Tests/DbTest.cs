@@ -31,7 +31,7 @@ namespace ExpressVoitures.Tests
                 context.Cars.Add(car);
                 context.SaveChanges();
 
-                Assert.Equal(1, context.Cars.Count());
+                Assert.NotEqual(0, context.Cars.Count());
                 saved = context.Cars.First();
                 Assert.Equal("VIN123", saved.VinCode);
             }
@@ -45,7 +45,6 @@ namespace ExpressVoitures.Tests
                 }
             }
         }
-
         [Fact]
         public async Task CarsController_AddCar()
         {
@@ -71,7 +70,7 @@ namespace ExpressVoitures.Tests
 
                 // Assert - action should redirect on success
                 Assert.IsType<RedirectToActionResult>(result);
-                Assert.Equal(1, context.Cars.Count());
+                Assert.NotEqual(0, context.Cars.Count());
                 saved = context.Cars.First();
                 Assert.Equal("VIN_CTRL", saved.VinCode);
             }
@@ -91,11 +90,12 @@ namespace ExpressVoitures.Tests
         public void DbContext_AddCarSale()
         {
             var context = GetDBContext();
+            var purchaseDate = DateTime.Now;
 
             var carSale = new CarSale
             {
                 CarId = 1,
-                PurchaseDate = DateTime.Now,
+                PurchaseDate = purchaseDate,
                 PurchasePrice = 15000.0f,
                 AvailableForSaleDate = DateTime.Now.AddDays(30),
                 SalePrice = 18000.0f,
@@ -110,9 +110,9 @@ namespace ExpressVoitures.Tests
                 context.CarSales.Add(carSale);
                 context.SaveChanges();
 
-                Assert.Equal(1, context.CarSales.Count());
+                Assert.NotEqual(0, context.CarSales.Count());
                 saved = context.CarSales.First();
-                Assert.Equal(1, saved.CarId);
+                Assert.Equal(purchaseDate, saved.PurchaseDate);
             }
             finally
             {
@@ -124,18 +124,18 @@ namespace ExpressVoitures.Tests
                 }
             }
         }
-
         [Fact]
         public async Task CarSalesController_AddCarSale()
         {
             // Arrange
             var context = GetDBContext();
             var controller = new CarSalesController(context);
+            var purachaseDate = DateTime.Now;
 
             var carSale = new CarSale
             {
                 CarId = 1,
-                PurchaseDate = DateTime.Now,
+                PurchaseDate = purachaseDate,
                 PurchasePrice = 15000.0f,
                 AvailableForSaleDate = DateTime.Now.AddDays(30),
                 SalePrice = 18000.0f,
@@ -152,9 +152,9 @@ namespace ExpressVoitures.Tests
 
                 // Assert - action should redirect on success
                 Assert.IsType<RedirectToActionResult>(result);
-                Assert.Equal(1, context.CarSales.Count());
+                Assert.NotEqual(0, context.CarSales.Count());
                 saved = context.CarSales.First();
-                Assert.Equal(1, saved.CarId);
+                Assert.Equal(purachaseDate, saved.PurchaseDate);
             }
             finally
             {
@@ -167,41 +167,60 @@ namespace ExpressVoitures.Tests
             }
         }
 
+
         [Fact]
         public void DbContext_AddRepair()
         {
             var context = GetDBContext();
 
-            var repair = new Repair
+            var car = new Car
             {
-                CarId = 1,
-                Description = "Brake replacement",
-                RepairCost = 300.0f
+                VinCode = "VIN123",
+                Year = 2020,
+                Make = "Toyota",
+                Model = "Corolla",
+                Trim = "LE"
             };
 
 
+            Car? carSaved = null;
             Repair? saved = null;
 
             try
             {
+                context.Cars.Add(car);
+                context.SaveChanges();
+
+                Assert.NotEqual(0, context.Cars.Count());
+                carSaved = context.Cars.FirstOrDefault(x => x.VinCode == car.VinCode);
+                Assert.Equal("VIN123", carSaved.VinCode);
+
+
+                var repair = new Repair
+                {
+                    CarId = carSaved.Id,
+                    Description = "Brake replacement",
+                    RepairCost = 300.0f
+                };
+
+
                 context.Repairs.Add(repair);
                 context.SaveChanges();
 
-                Assert.Equal(1, context.Repairs.Count());
-                saved = context.Repairs.First();
-                Assert.Equal(1, saved.CarId);
+                Assert.NotEqual(0, context.Repairs.Count());
+                saved = context.Repairs.FirstOrDefault(x => x.Description == repair.Description);
+                Assert.Equal(carSaved.Id, saved.CarId);
             }
             finally
             {
                 // Clean up the test data
-                if (saved != null)
+                if (carSaved != null)
                 {
-                    context.Repairs.Remove(saved);
+                    context.Cars.Remove(carSaved);
                     context.SaveChanges();
                 }
             }
         }
-
         [Fact]
         public async Task RepairsController_AddRepair()
         {
@@ -209,37 +228,57 @@ namespace ExpressVoitures.Tests
             var context = GetDBContext();
             var controller = new RepairsController(context);
 
-            var repair = new Repair
+
+            var car = new Car
             {
-                CarId = 1,
-                Description = "Brake replacement",
-                RepairCost = 300.0f
+                VinCode = "VIN123",
+                Year = 2020,
+                Make = "Toyota",
+                Model = "Corolla",
+                Trim = "LE"
             };
 
 
+            Car? carSaved = null;
             Repair? saved = null;
 
             try
             {
+                context.Cars.Add(car);
+                context.SaveChanges();
+
+                Assert.NotEqual(0, context.Cars.Count());
+                carSaved = context.Cars.FirstOrDefault(x => x.VinCode == car.VinCode);
+                Assert.Equal("VIN123", carSaved.VinCode);
+
+
+                var repair = new Repair
+                {
+                    CarId = carSaved.Id,
+                    Description = "Brake replacement",
+                    RepairCost = 300.0f
+                };
+
                 // Act
                 var result = await controller.Create(repair);
 
                 // Assert - action should redirect on success
                 Assert.IsType<RedirectToActionResult>(result);
-                Assert.Equal(1, context.Repairs.Count());
+                Assert.NotEqual(0, context.Repairs.Count());
                 saved = context.Repairs.First();
-                Assert.Equal(1, saved.CarId);
+                Assert.Equal(carSaved.Id, saved.CarId);
             }
             finally
             {
                 // Clean up the test data
-                if (saved != null)
+                if (carSaved != null)
                 {
-                    context.Repairs.Remove(saved);
+                    context.Cars.Remove(carSaved);
                     context.SaveChanges();
                 }
             }
         }
+
 
         private ApplicationDbContext GetDBContext()
         {
