@@ -2,23 +2,21 @@
 {
     public class Car
     {
-        public Car()
-        {
-            Repairs = new HashSet<Repair>();
-        }
-
         public int Id { get; set; }
-
         public string? VinCode { get; set; }
-
         public int Year { get; set; }
 
-        public string? Make { get; set; }
 
-        public string? Model { get; set; }
 
-        public string? Trim { get; set; }
+        public int? MakeId { get; set; }
+        public int? ModelId { get; set; }
+        public int? TrimId { get; set; }
 
-        public ICollection<Repair> Repairs { get; set; } = new List<Repair>();
+
+        public CarMake? Make { get; set; }
+        public CarModel? Model { get; set; }
+        public CarTrim? Trim { get; set; }
+        public CarSale? Sale { get; set; }
+        public ICollection<Repair> Repairs { get; set; } = new HashSet<Repair>();
     }
 }

@@ -19,13 +19,13 @@
                 @Html.DisplayNameFor(model => model.Year)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Make)
+                @Html.DisplayNameFor(model => model.MakeId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Model)
+                @Html.DisplayNameFor(model => model.ModelId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trim)
+                @Html.DisplayNameFor(model => model.TrimId)
             </th>
             <th></th>
         </tr>
@@ -40,13 +40,13 @@
                 @Html.DisplayFor(modelItem => item.Year)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Make)
+                @Html.DisplayFor(modelItem => item.MakeId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Model)
+                @Html.DisplayFor(modelItem => item.ModelId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Trim)
+                @Html.DisplayFor(modelItem => item.TrimId)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

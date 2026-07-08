@@ -17,10 +17,7 @@ namespace ExpressVoitures.Tests
             var car = new Car
             {
                 VinCode = "VIN123",
-                Year = 2020,
-                Make = "Toyota",
-                Model = "Corolla",
-                Trim = "LE"
+                Year = 2020
             };
 
 
@@ -55,10 +52,7 @@ namespace ExpressVoitures.Tests
             var car = new Car
             {
                 VinCode = "VIN_CTRL",
-                Year = 2021,
-                Make = "Honda",
-                Model = "Civic",
-                Trim = "LX"
+                Year = 2021
             };
 
             Car? saved = null;
@@ -176,10 +170,7 @@ namespace ExpressVoitures.Tests
             var car = new Car
             {
                 VinCode = "VIN123",
-                Year = 2020,
-                Make = "Toyota",
-                Model = "Corolla",
-                Trim = "LE"
+                Year = 2020
             };
 
 
@@ -232,10 +223,7 @@ namespace ExpressVoitures.Tests
             var car = new Car
             {
                 VinCode = "VIN123",
-                Year = 2020,
-                Make = "Toyota",
-                Model = "Corolla",
-                Trim = "LE"
+                Year = 2020
             };
 
 
