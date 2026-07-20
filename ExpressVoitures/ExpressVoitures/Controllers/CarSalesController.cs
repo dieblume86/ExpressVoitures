@@ -1,7 +1,12 @@
-﻿using ExpressVoitures.Data;
-using ExpressVoitures.Models.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using ExpressVoitures.Data;
+using ExpressVoitures.Models.Entities;
 
 namespace ExpressVoitures.Controllers
 {
@@ -17,7 +22,8 @@ namespace ExpressVoitures.Controllers
         // GET: CarSales
         public async Task<IActionResult> Index()
         {
-            return View(await _context.CarSales.ToListAsync());
+            var applicationDbContext = _context.CarSales.Include(c => c.Car);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: CarSales/Details/5
@@ -29,6 +35,7 @@ namespace ExpressVoitures.Controllers
             }
 
             var carSale = await _context.CarSales
+                .Include(c => c.Car)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (carSale == null)
             {
@@ -41,6 +48,7 @@ namespace ExpressVoitures.Controllers
         // GET: CarSales/Create
         public IActionResult Create()
         {
+            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Id");
             return View();
         }
 
@@ -49,7 +57,7 @@ namespace ExpressVoitures.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CarId,PurchaseDate,PurchasePrice,AvailableForSaleDate,SalePrice,SaleDate")] CarSale carSale)
+        public async Task<IActionResult> Create([Bind("Id,PurchaseDate,PurchasePrice,AvailableForSaleDate,SalePrice,SaleDate,CarId")] CarSale carSale)
         {
             if (ModelState.IsValid)
             {
@@ -57,6 +65,7 @@ namespace ExpressVoitures.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Id", carSale.CarId);
             return View(carSale);
         }
 
@@ -73,6 +82,7 @@ namespace ExpressVoitures.Controllers
             {
                 return NotFound();
             }
+            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Id", carSale.CarId);
             return View(carSale);
         }
 
@@ -81,7 +91,7 @@ namespace ExpressVoitures.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CarId,PurchaseDate,PurchasePrice,AvailableForSaleDate,SalePrice,SaleDate")] CarSale carSale)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,PurchaseDate,PurchasePrice,AvailableForSaleDate,SalePrice,SaleDate,CarId")] CarSale carSale)
         {
             if (id != carSale.Id)
             {
@@ -108,6 +118,7 @@ namespace ExpressVoitures.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Id", carSale.CarId);
             return View(carSale);
         }
 
@@ -120,6 +131,7 @@ namespace ExpressVoitures.Controllers
             }
 
             var carSale = await _context.CarSales
+                .Include(c => c.Car)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (carSale == null)
             {

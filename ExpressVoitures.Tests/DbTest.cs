@@ -10,6 +10,94 @@ namespace ExpressVoitures.Tests
     public class DbTest
     {
         [Fact]
+        public void DbContext_AddMake()
+        {
+            var context = GetDBContext();
+            var makeName = "Test Make";
+
+            var make = new CarMake
+            {
+                Name = makeName
+            };
+
+            CarMake? saved = null;
+
+            try
+            {
+                context.CarMakes.Add(make);
+                context.SaveChanges();
+                Assert.NotEqual(0, context.CarMakes.Count());
+                saved = context.CarMakes.FirstOrDefault(x=>x.Name == makeName);
+                Assert.Equal(makeName, saved.Name);
+            }
+            finally
+            {
+                // Clean up the test data
+                if (saved != null)
+                {
+                    context.CarMakes.Remove(saved);
+                    context.SaveChanges();
+                }
+            }
+        }
+        [Fact]
+        public void DbContext_AddModel()
+        {
+            var context = GetDBContext();
+            var modelName = "Test Model";
+            var model = new CarModel
+            {
+                Name = modelName
+            };
+            CarModel? saved = null;
+            try
+            {
+                context.CarModels.Add(model);
+                context.SaveChanges();
+                Assert.NotEqual(0, context.CarModels.Count());
+                saved = context.CarModels.FirstOrDefault(x => x.Name == modelName);
+                Assert.Equal(modelName, saved.Name);
+            }
+            finally
+            {
+                // Clean up the test data
+                if (saved != null)
+                {
+                    context.CarModels.Remove(saved);
+                    context.SaveChanges();
+                }
+            }
+        }
+        [Fact]
+        public void DbContext_AddTrim()
+        {
+            var context = GetDBContext();
+            var trimName = "Test Trim";
+            var trim = new CarTrim
+            {
+                Name = trimName
+            };
+            CarTrim? saved = null;
+            try
+            {
+                context.CarTrims.Add(trim);
+                context.SaveChanges();
+                Assert.NotEqual(0, context.CarTrims.Count());
+                saved = context.CarTrims.FirstOrDefault(x => x.Name == trimName);
+                Assert.Equal(trimName, saved.Name);
+            }
+            finally
+            {
+                // Clean up the test data
+                if (saved != null)
+                {
+                    context.CarTrims.Remove(saved);
+                    context.SaveChanges();
+                }
+            }
+        }
+
+        [Fact]
         public void DbContext_AddCar()
         {
             var context = GetDBContext();
