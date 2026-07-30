@@ -50,7 +50,7 @@ namespace ExpressVoitures.Controllers
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            _carMakeService.Remove(id);
+            _carMakeService.Delete(id);
             return View();
             //return RedirectToAction("Admin");
         }

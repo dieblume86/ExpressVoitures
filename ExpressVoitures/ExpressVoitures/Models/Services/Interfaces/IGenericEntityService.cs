@@ -16,6 +16,6 @@ namespace ExpressVoitures.Models.Services.Interfaces
         IEnumerable<string> CheckModelErrors(ViewModel viewModel);
         IEnumerable<ValidationResult> CheckProductValidationResult(ViewModel viewModel);
 
-        void Remove(int id);
+        void Delete(int id);
     }
 }

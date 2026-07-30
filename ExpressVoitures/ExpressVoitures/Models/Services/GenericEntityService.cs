@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using ExpressVoitures.Models.Repositories.Interfaces;
 using ExpressVoitures.Models.Services.Interfaces;
-using Microsoft.Build.Tasks.Deployment.Bootstrapper;
 using System.ComponentModel.DataAnnotations;
 
 namespace ExpressVoitures.Models.Services
@@ -65,7 +64,7 @@ namespace ExpressVoitures.Models.Services
             return results;
         }
 
-        public virtual void Remove(int id)
+        public virtual void Delete(int id)
         {
             _entityRepository.Remove(id);
         }

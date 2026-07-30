@@ -370,7 +370,7 @@ namespace ExpressVoitures.Tests
         //    }
         //}
         [Fact]
-        public async Task CarTrimsController_AddTrim()
+        public async Task CarTrimsController_Add_Trim()
         {
             var context = GetDBContext();
             var controller = new CarTrimsController(context);
@@ -405,7 +405,7 @@ namespace ExpressVoitures.Tests
             }
         }
         [Fact]
-        public async Task CarsController_AddCar()
+        public async Task CarsController_Add_Car()
         {
             // Arrange
             var context = GetDBContext();
@@ -441,7 +441,7 @@ namespace ExpressVoitures.Tests
             }
         }
         [Fact]
-        public async Task RepairsController_AddRepair()
+        public async Task RepairsController_Add_Repair()
         {
             // Arrange
             var context = GetDBContext();
@@ -495,7 +495,7 @@ namespace ExpressVoitures.Tests
             }
         }
         [Fact]
-        public async Task CarSalesController_AddCarSale()
+        public async Task CarSalesController_Add_CarSale()
         {
             // Arrange
             var context = GetDBContext();

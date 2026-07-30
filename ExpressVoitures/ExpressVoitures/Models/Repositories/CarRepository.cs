@@ -9,9 +9,5 @@ namespace ExpressVoitures.Models.Repositories
         public CarRepository(ApplicationDbContext context) : base(context)
         {
         }
-        public IEnumerable<Car> GetPopularCars(int count)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
