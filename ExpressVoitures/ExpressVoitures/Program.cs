@@ -1,4 +1,9 @@
 using ExpressVoitures.Data;
+using ExpressVoitures.Models.Profiles;
+using ExpressVoitures.Models.Repositories;
+using ExpressVoitures.Models.Repositories.Interfaces;
+using ExpressVoitures.Models.Services;
+using ExpressVoitures.Models.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +18,16 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+builder.Services.AddTransient<ICarMakeService, CarMakeService>();
+builder.Services.AddTransient<ICarMakeRepository, CarMakeRepository>();
+
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<CarMakeProfile>();
+});
 
 var app = builder.Build();
 

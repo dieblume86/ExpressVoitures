@@ -6,8 +6,11 @@
         public string? Name { get; set; }
 
 
+        public int MakeId { get; set; }
 
-        public ICollection<CarMake> Makes { get; set; } = new HashSet<CarMake>();
+
+        public CarMake? Make { get; set; }
+        public ICollection<CarTrim> Trims { get; set; } = new HashSet<CarTrim>();
         public ICollection<Car> Cars { get; set; } = new HashSet<Car>();
     }
 }

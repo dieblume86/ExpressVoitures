@@ -7,9 +7,10 @@ namespace ExpressVoitures.Models.Entities
         public int Id { get; set; }
         public string? Name { get; set; }
 
+        public int ModelId { get; set; }
 
 
-        public ICollection<CarMake> Makes { get; set; } = new HashSet<CarMake>();
+        public CarModel? Model { get; set; }
         public ICollection<Car> Cars { get; set; } = new HashSet<Car>();
     }
 }

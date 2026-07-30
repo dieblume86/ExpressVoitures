@@ -8,7 +8,6 @@
 
 
         public ICollection<CarModel> Models { get; set; } = new HashSet<CarModel>();
-        public ICollection<CarTrim> Trims { get; set; } = new HashSet<CarTrim>();
         public ICollection<Car> Cars { get; set; } = new HashSet<Car>();
     }
 }

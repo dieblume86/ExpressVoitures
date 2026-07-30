@@ -33,16 +33,22 @@ namespace ExpressVoitures.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<CarMake>()
-                    .HasMany(make => make.Models)
-                    .WithMany(model => model.Makes);
+                .HasMany(make => make.Models)
+                .WithOne(model => model.Make)
+                .HasForeignKey(model => model.MakeId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CarModel>()
-                    .HasMany(model => model.Makes)
-                    .WithMany(make => make.Models);
+                .HasMany(model => model.Trims)
+                .WithOne(trim => trim.Model)
+                .HasForeignKey(trim => trim.ModelId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CarTrim>()
-               .HasMany(t => t.Makes)
-               .WithMany(m => m.Trims);
+               .HasOne(t => t.Model)
+               .WithMany(m => m.Trims)
+               .HasForeignKey(t => t.ModelId)
+               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Car>(entity =>
             {
