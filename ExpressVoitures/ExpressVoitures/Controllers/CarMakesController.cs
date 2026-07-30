@@ -1,9 +1,7 @@
-﻿using ExpressVoitures.Models.Entities;
-using ExpressVoitures.Models.Services.Interfaces;
+﻿using ExpressVoitures.Models.Services.Interfaces;
 using ExpressVoitures.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ExpressVoitures.Controllers
 {
