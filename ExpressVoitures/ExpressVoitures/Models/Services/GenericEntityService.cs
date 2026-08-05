@@ -42,19 +42,15 @@ namespace ExpressVoitures.Models.Services
             var newEntity = AutoMapToEntity(viewModel);
             _entityRepository.Add(newEntity);
         }
-        public virtual IEnumerable<string> CheckModelErrors(ViewModel viewModel)
+        public virtual List<string> CheckModelErrors(ViewModel viewModel)
         {
             var modelErrors = new List<string>();
 
-            foreach (var vr in CheckProductValidationResult(viewModel))
-            {
-                if (vr.ErrorMessage != null)
-                    modelErrors.Add(vr.ErrorMessage);
-            }
+            CheckProductValidationResult(viewModel).ForEach(vr => modelErrors.Add(vr.ErrorMessage));
 
             return modelErrors;
         }
-        public virtual IEnumerable<ValidationResult> CheckProductValidationResult(ViewModel viewModel)
+        public virtual List<ValidationResult> CheckProductValidationResult(ViewModel viewModel)
         {
             var context = new ValidationContext(viewModel);
             var results = new List<ValidationResult>();

@@ -20,9 +20,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddTransient<ICarMakeRepository, CarMakeRepository>();
 
 builder.Services.AddTransient<ICarMakeService, CarMakeService>();
-builder.Services.AddTransient<ICarMakeRepository, CarMakeRepository>();
 
 builder.Services.AddAutoMapper(cfg =>
 {
