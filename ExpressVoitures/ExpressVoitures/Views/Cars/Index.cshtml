@@ -1,59 +1,36 @@
-﻿@model IEnumerable<ExpressVoitures.Models.Entities.Car>
+﻿@model IEnumerable<ExpressVoitures.Models.ViewModels.CarViewModel>
+
+<link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Test";
 }
+<div class="container text-center">
+	<h1 class="mb-4">Nos voitures</h1>
+	<div class="button">
+		<a asp-action="Create">+ Ajouter une voiture</a>
+	</div>
+</div>
 
-<h1>Index</h1>
+<div class="container">
+	<div class="row g-0">
+		@for (var i = 0; i < Model.Count(); i++)
+		{
+			if (i % 2 == 0)
+			{
+				<div class="row gy-3">
+					<div class="col-md-12 col-lg-6 px-lg-3">
+						@await Html.PartialAsync("_CarItem", Model.ElementAt(i))
+					</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.VinCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Year)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Make)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Model)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Trim)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.VinCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Year)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Make.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Model.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Trim.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+					@if (i + 1 < Model.Count())
+					{
+						<div class="col-md-12 col-lg-6 px-lg-3">
+							@await Html.PartialAsync("_CarItem", Model.ElementAt(i + 1))
+						</div>
+					}
+				</div>
+			}
+		}
+	</div>
+</div>

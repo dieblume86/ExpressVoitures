@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using ExpressVoitures.Models.Entities;
 using ExpressVoitures.Models.Repositories.Interfaces;
 using ExpressVoitures.Models.Services.Interfaces;
+using Microsoft.Build.Tasks.Deployment.Bootstrapper;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ExpressVoitures.Models.Services
@@ -20,22 +23,29 @@ namespace ExpressVoitures.Models.Services
         }
 
 
-        public virtual IEnumerable<Entity> GetAllEntities()
-        {
-            throw new NotImplementedException();
-        }
         public virtual Entity GetEntity(int id)
         {
             throw new NotImplementedException();
         }
+        public virtual List<Entity> GetAllEntities()
+        {
+            List<Entity> entites = _entityRepository.GetAll().ToList();
+            return entites;
+        }
+
         public virtual ViewModel GetViewModel(int id)
         {
             throw new NotImplementedException();
         }
-        public virtual IEnumerable<ViewModel> GetViewModels()
+        public virtual List<ViewModel> GetViewModels()
         {
-            throw new NotImplementedException();
+            List<ViewModel> viewModels = new();
+
+            GetAllEntities().ForEach(entity => viewModels.Add(AutoMapToViewModel(entity)));
+
+            return viewModels;
         }
+
 
         public virtual void Add(ViewModel viewModel)
         {

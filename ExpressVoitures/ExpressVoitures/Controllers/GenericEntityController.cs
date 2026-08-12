@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ExpressVoitures.Controllers
 {
 
-    [Authorize]
+    //[Authorize]
     public class GenericEntityController<TEntity, TViewModel, TService> : Controller
         where TEntity : class
         where TViewModel : class
@@ -18,12 +18,12 @@ namespace ExpressVoitures.Controllers
             _service = service;
         }
 
-        //public virtual IActionResult Index()
-        //{
-        //    IEnumerable<CarMakeViewModel> makes = _carMakeService.GetAllCarMakesViewModel();
+        public virtual IActionResult Index()
+        {
+            IEnumerable<TViewModel> viewModels = _service.GetViewModels();
 
-        //    return View(makes);
-        //}
+            return View(viewModels);
+        }
 
         [Authorize]
         [HttpPost]

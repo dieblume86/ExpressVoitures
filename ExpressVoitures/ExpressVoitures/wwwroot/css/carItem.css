@@ -1,0 +1,29 @@
+﻿@import url("shared.css");
+
+h6 {
+	font-family: var(--font-family-title);
+	font-weight: 700;
+	font-size: 1.75rem;
+	line-height: 100%;
+	letter-spacing: 0%;
+	color: var(--mainColor);
+}
+
+ul {
+	font-family: var(--font-family-simple);
+	font-weight: 400;
+	font-size: 1.125rem;
+	line-height: 100%;
+	letter-spacing: 0%;
+	color: var(--lightMain);
+}
+
+	ul.listNoType {
+		list-style-type: none;
+	}
+
+img {
+	width: 100%;
+	height: auto;
+	display: block;
+}

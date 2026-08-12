@@ -1,0 +1,18 @@
+﻿@using ExpressVoitures.Models.ViewModels
+
+<link rel="stylesheet" href="~/css/carItem.css" asp-append-version="true" />
+
+<div class="row">
+	<div class="col-md-12 col-lg-8 bg-secondary">
+		<img src="~/images/carImagePlaceHolder.JPG" />
+	</div>
+	<div class="col-md-12 col-lg-4 bg-light d-flex align-items-center py">
+		<ul class="listNoType">
+			<li><h6>Prix de vente</h6></li>
+			<li>@Model.Year</li>
+			<li>@Model.MakeId</li>
+			<li>@Model.ModelId</li>
+			<li>@Model.TrimId</li>
+		</ul>
+	</div>
+</div>

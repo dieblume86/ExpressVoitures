@@ -1,0 +1,38 @@
+﻿@import url("reset.css");
+
+:root {
+	/*Font*/
+	--titleColor: #796157;
+	--mainColor: #2C1810;
+	--blackColor: #000000;
+	--whiteColor: #ffffff;
+	--lightMain: #796157;
+	--font-family-title: Libre Baskerville;
+	--font-family-simple: DM Sans;
+	/*Button*/
+	--buttonBgColor: #D9A963;
+	--buttonBgDarkColor: #B99056;
+	--buttonBgLightColor: #F2E3CE;
+	--button-font-family: var(--font-family-simple);
+	--button-font-weight: 400;
+	--button-font-style: Regular;
+	--button-font-size: 1rem;
+	--button-leading-trim: NONE;
+	--button-line-height: 100%;
+	--button-letter-spacing: 0%;
+	--button-text-align: center;
+	--button-font: var(--button-font-family) var(--button-font-weight) var(--button-font-style) var(--button-font-size) var(--button-line-height) var(--button-letter-spacing) var(--button-text-align);
+	/*AddButton*/
+	--add-button-border: 0.0625rem solid var(--buttonBgColor);
+}
+
+.button {
+	display: inline-grid;
+	width: 10.9375rem;
+	height: 3.8125rem;
+	background-color: var(--buttonBgColor);
+	border-radius: 0.3125rem;
+	cursor: pointer;
+	justify-content: center;
+	align-items: center;
+}

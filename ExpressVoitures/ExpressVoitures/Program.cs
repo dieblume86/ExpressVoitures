@@ -20,13 +20,19 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddTransient<ICarMakeRepository, CarMakeRepository>();
 
+builder.Services.AddTransient<ICarMakeRepository, CarMakeRepository>();
 builder.Services.AddTransient<ICarMakeService, CarMakeService>();
+
+
+builder.Services.AddTransient<ICarRepository, CarRepository>();
+builder.Services.AddTransient<ICarService, CarService>();
+
 
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<CarMakeProfile>();
+    cfg.AddProfile<CarProfile>();
 });
 
 var app = builder.Build();
@@ -52,7 +58,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Cars}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 app.MapRazorPages()

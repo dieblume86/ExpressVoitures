@@ -127,12 +127,12 @@ namespace ExpressVoitures.Tests
             }
             finally
             {
-                // Clean up the test data
-                if (saved != null)
-                {
-                    context.Cars.Remove(saved);
-                    context.SaveChanges();
-                }
+                //// Clean up the test data
+                //if (saved != null)
+                //{
+                //    context.Cars.Remove(saved);
+                //    context.SaveChanges();
+                //}
             }
         }
         [Fact]

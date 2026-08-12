@@ -8,9 +8,9 @@ namespace ExpressVoitures.Models.Services.Interfaces
         where ViewModel : class
     {
         Entity GetEntity(int id);
-        IEnumerable<Entity> GetAllEntities();
+        List<Entity> GetAllEntities();
         ViewModel GetViewModel(int id);
-        IEnumerable<ViewModel> GetViewModels();
+        List<ViewModel> GetViewModels();
 
         void Add(ViewModel viewModel);
         List<string> CheckModelErrors(ViewModel viewModel);
