@@ -16,17 +16,7 @@ header *{
 	color: var(--mainColor);
 }
 
-.navbar-nav {
-	gap: 3rem;
-}
-
 .nav-link {
+	text-align: center;
 	color: var(--blackColor);
 }
-
-/*div.navbar-collapse {
-	display: flex;
-	align-items: center;
-	justify-content: flex-end !important;
-	padding-right: 0.625rem;
-}*/
