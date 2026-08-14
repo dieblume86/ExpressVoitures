@@ -1,6 +1,10 @@
 ﻿@import url("shared.css");
 
-h6 {
+.car-item {
+	cursor: pointer;
+}
+
+span {
 	font-family: var(--font-family-title);
 	font-weight: 700;
 	font-size: 1.75rem;
