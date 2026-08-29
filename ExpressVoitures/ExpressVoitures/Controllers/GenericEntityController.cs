@@ -25,10 +25,17 @@ namespace ExpressVoitures.Controllers
             return View(viewModels);
         }
 
+        //[Authorize]
+        public ViewResult Create()
+        {
+            return View();
+        }
+
         [Authorize]
         [HttpPost]
         public virtual IActionResult Create(TViewModel viewModel)
         {
+
             _service.Add(viewModel);
             return View();
 

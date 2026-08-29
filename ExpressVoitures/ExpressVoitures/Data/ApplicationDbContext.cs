@@ -1,4 +1,5 @@
 ﻿using ExpressVoitures.Models.Entities;
+using ExpressVoitures.Models.ViewModels;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -79,6 +80,9 @@ namespace ExpressVoitures.Data
                     .WithOne(c => c.Sale)
                     .HasForeignKey<CarSale>(s => s.CarId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+
+            //modelBuilder.Entity<LoginModel>().HasData(IdentitySeedData);
         }
     }
 }

@@ -1,50 +1,33 @@
-﻿@model ExpressVoitures.Models.Entities.Car
+﻿@model ExpressVoitures.Models.ViewModels.CarViewModel
 
 @{
-    ViewData["Title"] = "Create";
+	// ViewData["Title"] = "Create";
+	// Layout = "_AdminLayout";
 }
 
-<h1>Create</h1>
-
-<h4>Car</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="VinCode" class="control-label"></label>
-                <input asp-for="VinCode" class="form-control" />
-                <span asp-validation-for="VinCode" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Year" class="control-label"></label>
-                <input asp-for="Year" class="form-control" />
-                <span asp-validation-for="Year" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MakeId" class="control-label"></label>
-                <select asp-for="MakeId" class ="form-control" asp-items="ViewBag.MakeId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModelId" class="control-label"></label>
-                <select asp-for="ModelId" class ="form-control" asp-items="ViewBag.ModelId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="TrimId" class="control-label"></label>
-                <select asp-for="TrimId" class ="form-control" asp-items="ViewBag.TrimId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+<form asp-action="Create" method="post">
+	<div class="mb-3 col-6">
+		<label>@Model.VinCode:</label>
+		<input asp-for="VinCode" class="form-control" />
+		<span asp-validation-for="VinCode" class="text-danger"></span>
+	</div>
+	<div class="mb-3 col-4">
+		<label>@Model.Year:</label>
+		<input asp-for="Year" class="form-control" />
+		<span asp-validation-for="Year" class="text-danger"></span>
+	</div>
+	<div class="mb-3 col-8">
+		<label>@Model.MakeId:</label><input asp-for="MakeId" class="form-control" />
+	</div>
+	<div class="mb-3 col-4">
+		<label>@Model.ModelId:</label>
+		<input asp-for="ModelId" class="form-control" />
+		<span asp-validation-for="ModelId" class="text-danger"></span>
+	</div>
+	<div class="mb-3col-8">
+		<label>@Model.TrimId:</label><input asp-for="TrimId" class="form-control" />
+	</div>
+	<div class="text-center">
+		<input class="btn btn-primary" type="submit" value="OK" />
+	</div>
+</form>
