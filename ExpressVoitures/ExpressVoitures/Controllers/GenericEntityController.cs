@@ -1,4 +1,5 @@
 ﻿using ExpressVoitures.Models.Services.Interfaces;
+using ExpressVoitures.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +9,12 @@ namespace ExpressVoitures.Controllers
     //[Authorize]
     public class GenericEntityController<TEntity, TViewModel, TService> : Controller
         where TEntity : class
-        where TViewModel : class
+        where TViewModel : class, new()
         where TService : IGenericEntityService<TEntity, TViewModel>
     {
         protected readonly TService _service;
+
+        protected const string dataExistingItems = "ExistingItems";
 
         public GenericEntityController(TService service)
         {
@@ -25,45 +28,50 @@ namespace ExpressVoitures.Controllers
             return View(viewModels);
         }
 
-        //[Authorize]
-        public ViewResult Create()
+        [Authorize]
+        [HttpGet]
+        public virtual IActionResult Create()
         {
-            return View();
+            ViewData[dataExistingItems] = _service.GetViewModels();
+            return View(new TViewModel());
         }
 
         [Authorize]
         [HttpPost]
         public virtual IActionResult Create(TViewModel viewModel)
         {
+            IEnumerable<string> modelErrors = _service.CheckModelErrors(viewModel);
 
-            _service.Add(viewModel);
-            return View();
+            foreach (string error in modelErrors)
+            {
+                ModelState.AddModelError("", error);
+            }
 
-            //IEnumerable<string> modelErrors = _carMakeService.CheckModelErrors(make);
+            if (ModelState.IsValid)
+            {
+                _service.Add(viewModel);
 
-            //foreach (string error in modelErrors)
-            //{
-            //    ModelState.AddModelError("", error);
-            //}
-
-            //if (ModelState.IsValid)
-            //{
-            //    _carMakeService.Add(make);
-            //    return RedirectToAction("Admin");
-            //}
-            //else
-            //{
-            //    return View(make);
-            //}
+                TempData["Success"] = "Success.";
+                return RedirectToAction(nameof(Create));
+            }
+            else
+            {
+                ViewData[dataExistingItems] = _service.GetViewModels();
+                return View(viewModel);
+            }
         }
 
         [Authorize]
         [HttpPost]
         public virtual IActionResult Delete(int id)
         {
+            //_service.Delete(id);
+            //return View();
+            ////return RedirectToAction("Admin");
             _service.Delete(id);
-            return View();
-            //return RedirectToAction("Admin");
+
+            ViewData[dataExistingItems] = _service.GetViewModels();
+            return RedirectToAction(nameof(Create));
         }
     }
 }

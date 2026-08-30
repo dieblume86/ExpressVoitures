@@ -80,9 +80,6 @@ namespace ExpressVoitures.Data
                     .WithOne(c => c.Sale)
                     .HasForeignKey<CarSale>(s => s.CarId)
                     .OnDelete(DeleteBehavior.Cascade);
-
-
-            //modelBuilder.Entity<LoginModel>().HasData(IdentitySeedData);
         }
     }
 }

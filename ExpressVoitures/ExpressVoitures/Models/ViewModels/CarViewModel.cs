@@ -8,20 +8,20 @@ namespace ExpressVoitures.Models.ViewModels
         [BindNever]
         public int Id { get; set; }
 
-        [Required(ErrorMessageResourceName = "MissingVinCode")]
+        [Required(ErrorMessage = "MissingVinCode")]
         public string VinCode { get; set; }
 
-        [Required(ErrorMessageResourceName = "MissingYear")]
+        [Required(ErrorMessage = "MissingYear")]
         public int Year { get; set; }
 
 
-        [Required(ErrorMessageResourceName = "MissingMakeId")]
+        [Required(ErrorMessage = "MissingMakeId")]
         public int MakeId { get; set; }
 
-         [Required(ErrorMessageResourceName = "MissingModelId")]
+         [Required(ErrorMessage = "MissingModelId")]
         public int ModelId { get; set; }
 
-         [Required(ErrorMessageResourceName = "MissingTrimId")]
+         [Required(ErrorMessage = "MissingTrimId")]
         public int TrimId { get; set; }
     }
 }

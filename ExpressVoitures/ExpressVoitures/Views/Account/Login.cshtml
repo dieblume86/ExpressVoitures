@@ -1,5 +1,8 @@
 ﻿csharp ExpressVoitures\Views\Account\Login.cshtml
 @model ExpressVoitures.Models.ViewModels.LoginModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 @{
     ViewBag.Title = "Log In";

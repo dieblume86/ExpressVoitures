@@ -8,10 +8,10 @@ namespace ExpressVoitures.Models.ViewModels
         [BindNever]
         public int Id { get; set; }
 
-        [Required(ErrorMessageResourceName = "MissingName")]
+        [Required(ErrorMessage = "MissingName")]
         public string Name { get; set; }
 
-        [Required(ErrorMessageResourceName = "MissingMakeId")]
+        [Required(ErrorMessage = "MissingMakeId")]
         public int MakeId { get; set; }
     }
 }

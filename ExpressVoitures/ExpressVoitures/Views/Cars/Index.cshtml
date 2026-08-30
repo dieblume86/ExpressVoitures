@@ -7,9 +7,18 @@
 }
 <div class="container text-center">
 	<h1 class="mb-4">Nos voitures</h1>
-	<div class="button">
-		<a asp-action="Create" asp-controller="Cars">+ Ajouter une voiture</a>
-	</div>
+	@if (User?.Identity?.IsAuthenticated == true)
+	{
+		<div class="button">
+			<a asp-action="Create" asp-controller="Cars">+ Ajouter une voiture</a>
+		</div>
+@* 		<div class="button">
+			<a href="/Cars/Create">+ Ajouter une voiture</a>
+		</div>
+		<div class="button">
+<a href="@Url.Action("Create", "Cars")">+ Ajouter une voiture</a>
+		</div> *@
+	}
 </div>
 
 <div class="container">

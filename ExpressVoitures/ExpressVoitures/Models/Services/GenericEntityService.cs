@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
-using ExpressVoitures.Models.Entities;
 using ExpressVoitures.Models.Repositories.Interfaces;
 using ExpressVoitures.Models.Services.Interfaces;
-using Microsoft.Build.Tasks.Deployment.Bootstrapper;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ExpressVoitures.Models.Services

@@ -1,33 +1,76 @@
 ﻿@model ExpressVoitures.Models.ViewModels.CarViewModel
 
 @{
-	// ViewData["Title"] = "Create";
-	// Layout = "_AdminLayout";
+	ViewData["Title"] = "Create";
 }
+<div><p>Créer une nouvelle voiture</p></div>
 
 <form asp-action="Create" method="post">
-	<div class="mb-3 col-6">
-		<label>@Model.VinCode:</label>
-		<input asp-for="VinCode" class="form-control" />
-		<span asp-validation-for="VinCode" class="text-danger"></span>
-	</div>
-	<div class="mb-3 col-4">
-		<label>@Model.Year:</label>
-		<input asp-for="Year" class="form-control" />
-		<span asp-validation-for="Year" class="text-danger"></span>
-	</div>
-	<div class="mb-3 col-8">
-		<label>@Model.MakeId:</label><input asp-for="MakeId" class="form-control" />
-	</div>
-	<div class="mb-3 col-4">
-		<label>@Model.ModelId:</label>
-		<input asp-for="ModelId" class="form-control" />
-		<span asp-validation-for="ModelId" class="text-danger"></span>
-	</div>
-	<div class="mb-3col-8">
-		<label>@Model.TrimId:</label><input asp-for="TrimId" class="form-control" />
-	</div>
-	<div class="text-center">
-		<input class="btn btn-primary" type="submit" value="OK" />
-	</div>
+     @Html.AntiForgeryToken() 
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="mb-3 col-6">
+        <label asp-for="VinCode"></label>
+        <input asp-for="VinCode" class="form-control" />
+        <span asp-validation-for="VinCode" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3 col-4">
+        <label asp-for="Year"></label>
+        <input asp-for="Year" class="form-control" />
+        <span asp-validation-for="Year" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3 col-8">
+        <label asp-for="MakeId"></label>
+        <input asp-for="MakeId" class="form-control" />
+    </div>
+
+    <div class="mb-3 col-4">
+        <label asp-for="ModelId"></label>
+        <input asp-for="ModelId" class="form-control" />
+        <span asp-validation-for="ModelId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3 col-8">
+        <label asp-for="TrimId"></label>
+        <input asp-for="TrimId" class="form-control" />
+    </div>
+
+    <div class="text-center">
+        <input class="btn btn-primary" type="submit" value="OK" />
+    </div> 
 </form>
+
+@* @{
+	var items = ViewData["ExistingItems"] as IEnumerable<ExpressVoitures.Models.ViewModels.CarMakeViewModel>;
+
+	if (items != null && items.Any())
+	{
+		<div class="mb-3 col-6">
+			<label>Marques existantes:</label>
+			<select class="form-select" asp-for="Id">
+				<option value="">-- Choisir --</option>
+				@foreach (var m in items)
+				{
+					<option value="@m.Id">@m.Name</option>
+				}
+			</select>
+		</div>
+
+		<tbody>
+			@foreach (var item in items)
+			{
+				<tr>
+					<td>@item.Name</td>
+					<td>
+						<form id="@item.Id" asp-action="Delete" asp-controller="CarMakes" method="post">
+							<input type="hidden" name="id" value="@item.Id" />
+							<button type="submit" class="btn btn-danger">"Delete"</button>
+						</form>
+					</td>
+				</tr>
+			}
+		</tbody>
+	}
+} *@
