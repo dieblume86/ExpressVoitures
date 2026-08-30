@@ -19,11 +19,14 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
 builder.Services.AddTransient<ICarMakeRepository, CarMakeRepository>();
 builder.Services.AddTransient<ICarMakeService, CarMakeService>();
 
+builder.Services.AddTransient<ICarModelRepository, CarModelRepository>();
+builder.Services.AddTransient<ICarModelService, CarModelService>();
+
+builder.Services.AddTransient<ICarTrimRepository, CarTrimRepository>();
+builder.Services.AddTransient<ICarTrimService, CarTrimService>();
 
 builder.Services.AddTransient<ICarRepository, CarRepository>();
 builder.Services.AddTransient<ICarService, CarService>();
@@ -32,6 +35,8 @@ builder.Services.AddTransient<ICarService, CarService>();
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<CarMakeProfile>();
+    cfg.AddProfile<CarModelProfile>();
+    cfg.AddProfile<CarTrimProfile>();
     cfg.AddProfile<CarProfile>();
 });
 

@@ -284,11 +284,16 @@ namespace ExpressVoitures.Tests
         {
             // Arrange
             var context = GetDBContext();
+            var carMakeRepository = new CarMakeRepository(context);
+            var carMakeMapper = GetAutoMapper<CarMakeProfile>();
+
+            var carMakeService = new CarMakeService(carMakeRepository, carMakeMapper);
+
             var repository = new CarModelRepository(context);
             var mapper = GetAutoMapper<CarModelProfile>();
 
             var service = new CarModelService(repository, mapper);
-            var controller = new CarModelsController(service);
+            var controller = new CarModelsController(service, carMakeService);
 
             var target = $"Test_{Guid.NewGuid():N}";
 

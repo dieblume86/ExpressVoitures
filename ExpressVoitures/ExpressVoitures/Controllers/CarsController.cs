@@ -9,34 +9,5 @@ namespace ExpressVoitures.Controllers
         public CarsController(ICarService carService) : base(carService)
         {
         }
-
-        //private readonly ICarService _carService;
-
-        //public CarsController(ICarService carService)
-        //{
-        //    _carService = carService;
-        //}
-
-
-        //public virtual IActionResult Index()
-        //{
-        //    IEnumerable<CarViewModel> viewModels = _carService.GetViewModels();
-
-        //    return View(viewModels);
-        //}
-
-        //[Authorize]
-        //[HttpGet]
-        //public IActionResult Create()
-        //{
-        //    return View(new CarViewModel());
-        //}
-
-        //[Authorize]
-        //[HttpPost]
-        //public IActionResult Create(CarViewModel product)
-        //{
-        //    return RedirectToAction("Index");
-        //}
     }
 }
