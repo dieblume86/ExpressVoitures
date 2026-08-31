@@ -26,13 +26,7 @@ namespace ExpressVoitures.Controllers
         [HttpGet]
         public override IActionResult Create()
         {
-            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
-            ViewData["Makes"] = new SelectList(makes, "Id", "Name");
-
-            var models = _carModelService.GetViewModels().OrderBy(m => m.Name);
-            ViewData["Models"] = new SelectList(Enumerable.Empty<object>(), "Id", "Name");
-
-            ViewData[dataExistingItems] = GetCarTrimsWithParents();
+            SetViewDatas();
 
             return View(new CarTrimViewModel());
         }
@@ -41,13 +35,7 @@ namespace ExpressVoitures.Controllers
         [HttpPost]
         public override IActionResult Create(CarTrimViewModel viewModel)
         {
-            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
-            ViewData["Makes"] = new SelectList(makes, "Id", "Name");
-
-            var models = _carModelService.GetViewModels().OrderBy(m => m.Name);
-            ViewData["Models"] = new SelectList(Enumerable.Empty<object>(), "Id", "Name");
-
-            ViewData[dataExistingItems] = GetCarTrimsWithParents();
+            SetViewDatas();
 
             //TODO trim name already exists for the same model and return an error message if so
 
@@ -68,7 +56,16 @@ namespace ExpressVoitures.Controllers
         }
 
 
+        private void SetViewDatas()
+        {
+            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
+            ViewData["Makes"] = new SelectList(makes, "Id", "Name");
 
+            var models = _carModelService.GetViewModels().OrderBy(m => m.Name);
+            ViewData["Models"] = new SelectList(Enumerable.Empty<object>(), "Id", "Name");
+
+            ViewData[dataExistingItems] = GetCarTrimsWithParents();
+        }
         private List<CarTrimViewModel> GetCarTrimsWithParents()
         {
             var collection = _service.GetViewModels();

@@ -21,10 +21,7 @@ namespace ExpressVoitures.Controllers
         [HttpGet]
         public override IActionResult Create()
         {
-            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
-            ViewData["Makes"] = new SelectList(makes, "Id", "Name");
-
-            ViewData[dataExistingItems] = GetCarModelsWithMakes();
+            SetViewDatas();
 
             return View(new CarModelViewModel());
         }
@@ -33,10 +30,7 @@ namespace ExpressVoitures.Controllers
         [HttpPost]
         public override IActionResult Create(CarModelViewModel viewModel)
         {
-            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
-            ViewData["Makes"] = new SelectList(makes, "Id", "Name");
-
-            ViewData[dataExistingItems] = GetCarModelsWithMakes();
+            SetViewDatas();
 
             //TODO model name already exists for the same make and return an error message if so
 
@@ -44,7 +38,13 @@ namespace ExpressVoitures.Controllers
         }
 
 
+        private void SetViewDatas()
+        {
+            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
+            ViewData["Makes"] = new SelectList(makes, "Id", "Name");
 
+            ViewData[dataExistingItems] = GetCarModelsWithMakes();
+        }
         private List<CarModelViewModel> GetCarModelsWithMakes()
         {
             var collection = _service.GetViewModels();

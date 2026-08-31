@@ -18,7 +18,7 @@ namespace ExpressVoitures.Controllers
         [HttpGet]
         public override IActionResult Create()
         {
-            ViewData[dataExistingItems] = _service.GetViewModels().OrderBy(m => m.Name);
+            SetViewDatas();
 
             return View(new CarMakeViewModel());
         }
@@ -27,11 +27,18 @@ namespace ExpressVoitures.Controllers
         [HttpPost]
         public override IActionResult Create(CarMakeViewModel viewModel)
         {
-            ViewData[dataExistingItems] = _service.GetViewModels().OrderBy(m => m.Name);
+            SetViewDatas();
 
             //TODO model name already exists for the same make and return an error message if so
 
             return base.Create(viewModel);
+        }
+
+
+
+        private void SetViewDatas()
+        {
+            ViewData[dataExistingItems] = _service.GetViewModels().OrderBy(m => m.Name);
         }
     }
 }
