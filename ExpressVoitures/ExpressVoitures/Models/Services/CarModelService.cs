@@ -11,5 +11,17 @@ namespace ExpressVoitures.Models.Services
         public CarModelService(ICarModelRepository carModelRepository, IMapper mapper) : base(carModelRepository, mapper)
         {
         }
+
+        //public override List<CarModelViewModel> GetViewModels()
+        //{
+        //    var viewModels = base.GetViewModels();
+
+        //    foreach (var viewModel in viewModels)
+        //    {
+        //        viewModel.LoadCarMake(id => _mapper.Map<CarMakeViewModel>(_repository.GetById(id).CarMake));
+        //    }
+
+        //    return viewModels;
+        //}
     }
 }

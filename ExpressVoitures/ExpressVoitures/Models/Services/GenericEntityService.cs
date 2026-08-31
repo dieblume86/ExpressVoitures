@@ -22,7 +22,7 @@ namespace ExpressVoitures.Models.Services
 
         public virtual Entity GetEntity(int id)
         {
-            throw new NotImplementedException();
+           return _entityRepository.GetById(id);
         }
         public virtual List<Entity> GetAllEntities()
         {
@@ -32,7 +32,7 @@ namespace ExpressVoitures.Models.Services
 
         public virtual ViewModel GetViewModel(int id)
         {
-            throw new NotImplementedException();
+           return AutoMapToViewModel(GetEntity(id));
         }
         public virtual List<ViewModel> GetViewModels()
         {

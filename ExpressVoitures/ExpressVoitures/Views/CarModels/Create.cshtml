@@ -1,7 +1,7 @@
 ﻿@model ExpressVoitures.Models.ViewModels.CarModelViewModel
 
 @{
-    ViewData["Title"] = "Create";
+	ViewData["Title"] = "Create";
 }
 
 <h1>Create</h1>
@@ -40,16 +40,33 @@
 
 	if (items != null && items.Any())
 	{
+		<div class="row">
+			<div class="col-4">
+				<span>Marque</span>
+			</div>
+			<div class="col-4">
+				<span>Modèle</span>
+			</div>
+			<div class="col-4">
+				<span>Supprimer</span>
+			</div>
+		</div>
 		@foreach (var item in items)
 		{
-			<div class="row">
-				<div class="col-8">
-					<span>@item.Name (@item.MakeId)</span>
+			<div class="row border-top py-2">
+				<div class="col-4">
+					@{
+						var makeName = item.CarMakeViewModel?.Name ?? "(Marque inconnue)";
+					}
+					<span>@makeName</span>
+				</div>
+				<div class="col-4">
+					<span>@item.Name</span>
 				</div>
 				<div class="col-4">
 					<form id="@item.Id" asp-action="Delete" asp-controller="CarModels" method="post">
 						<input type="hidden" name="id" value="@item.Id" />
-						<button type="submit" class="btn btn-danger">"Delete"</button>
+						<button type="submit" class="btn btn-danger">Delete</button>
 					</form>
 				</div>
 			</div>
@@ -58,5 +75,7 @@
 }
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 }

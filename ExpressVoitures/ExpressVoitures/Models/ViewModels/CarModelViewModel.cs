@@ -14,5 +14,8 @@ namespace ExpressVoitures.Models.ViewModels
         [Required(ErrorMessage = "MissingMakeId")]
         public int MakeId { get; set; }
 
+
+        [BindNever]
+        public CarMakeViewModel? CarMakeViewModel { get; set; }
     }
 }
