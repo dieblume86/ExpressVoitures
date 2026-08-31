@@ -13,5 +13,9 @@ namespace ExpressVoitures.Models.ViewModels
 
         [Required(ErrorMessage = "MissingModelId")]
         public int ModelId { get; set; }
+
+
+        [BindNever]
+        public CarModelViewModel? CarModelViewModel { get; set; }
     }
 }

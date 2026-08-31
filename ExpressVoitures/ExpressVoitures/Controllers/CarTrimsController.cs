@@ -1,13 +1,74 @@
 ﻿using ExpressVoitures.Models.Entities;
+using ExpressVoitures.Models.Services;
 using ExpressVoitures.Models.Services.Interfaces;
 using ExpressVoitures.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ExpressVoitures.Controllers
 {
-    public class CarTrimsController : GenericEntityController<CarTrim, CarTrimViewModel,  ICarTrimService>
+    public class CarTrimsController : GenericEntityController<CarTrim, CarTrimViewModel, ICarTrimService>
     {
-        public CarTrimsController(ICarTrimService carTrimService) : base(carTrimService)
+        private readonly ICarMakeService _carMakeService;
+        private const string unknownMake = "Marque inconnue";
+
+        private readonly ICarModelService _carModelService;
+        private const string unknownModel = "Modèle inconnu";
+
+        public CarTrimsController(ICarTrimService carTrimService, ICarMakeService carMakeService, ICarModelService carModelService) : base(carTrimService)
         {
+            _carMakeService = carMakeService;
+            _carModelService = carModelService;
+        }
+
+        [Authorize]
+        [HttpGet]
+        public override IActionResult Create()
+        {
+            var collection = _service.GetViewModels();
+
+            foreach (var item in collection)
+            {
+                var modelVm = _carModelService.GetViewModel(item.ModelId);
+                item.CarModelViewModel = modelVm ?? new CarModelViewModel { Id = 0, Name = unknownModel };
+
+                var makeVm = _carMakeService.GetViewModel(modelVm.MakeId);
+                item.CarModelViewModel.CarMakeViewModel = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
+            }
+
+            ViewData[dataExistingItems] = collection.OrderBy(m => m.CarModelViewModel?.CarMakeViewModel?.Name).ThenBy(m => m.CarModelViewModel?.Name);
+
+            var models = _carModelService.GetViewModels().OrderBy(m => m.Name);
+
+            ViewData["Models"] = new SelectList(models, "Id", "Name");
+
+            return View(new CarTrimViewModel());
+        }
+
+        [Authorize]
+        [HttpPost]
+        public override IActionResult Create(CarTrimViewModel viewModel)
+        {
+            var models = _carModelService.GetViewModels().OrderBy(m => m.Name);
+
+            ViewData["Models"] = new SelectList(models, "Id", "Name", viewModel?.ModelId);
+
+            var collection = _service.GetViewModels();
+            foreach (var item in collection)
+            {
+                var modelVm = _carModelService.GetViewModel(item.ModelId);
+                item.CarModelViewModel = modelVm ?? new CarModelViewModel { Id = 0, Name = unknownModel };
+
+                var makeVm = _carMakeService.GetViewModel(modelVm.MakeId);
+                item.CarModelViewModel.CarMakeViewModel = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
+            }
+
+            ViewData[dataExistingItems] = collection.OrderBy(m => m.CarModelViewModel?.CarMakeViewModel?.Name).ThenBy(m => m.CarModelViewModel?.Name);
+
+            //TODO trim name already exists for the same model and return an error message if so
+
+            return base.Create(viewModel);
         }
     }
 }

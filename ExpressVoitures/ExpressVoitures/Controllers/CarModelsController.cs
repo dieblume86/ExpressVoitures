@@ -10,7 +10,7 @@ namespace ExpressVoitures.Controllers
     public class CarModelsController : GenericEntityController<CarModel, CarModelViewModel, ICarModelService>
     {
         private readonly ICarMakeService _carMakeService;
-        private const string unknownMake= "Marque inconnue";
+        private const string unknownMake = "Marque inconnue";
 
         public CarModelsController(ICarModelService carModelService, ICarMakeService carMakeService) : base(carModelService)
         {
@@ -29,11 +29,9 @@ namespace ExpressVoitures.Controllers
                 item.CarMakeViewModel = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
             }
 
-            ViewData[dataExistingItems] = collection.OrderBy(m=>m.CarMakeViewModel?.Name);
+            ViewData[dataExistingItems] = collection.OrderBy(m => m.CarMakeViewModel?.Name);
 
-            var makes = _carMakeService.GetViewModels()
-                .OrderBy(m => m.Name)
-                ;
+            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
 
             ViewData["Makes"] = new SelectList(makes, "Id", "Name");
 
@@ -44,9 +42,7 @@ namespace ExpressVoitures.Controllers
         [HttpPost]
         public override IActionResult Create(CarModelViewModel viewModel)
         {
-            var makes = _carMakeService.GetViewModels()
-                .OrderBy(m => m.Name)
-                ;
+            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
 
             ViewData["Makes"] = new SelectList(makes, "Id", "Name", viewModel?.MakeId);
 

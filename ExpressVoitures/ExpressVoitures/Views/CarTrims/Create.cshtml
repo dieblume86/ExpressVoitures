@@ -16,6 +16,14 @@
 }
 <form asp-action="Create" method="post">
 	<div class="mb-3 col-6">
+		<label>Marque:</label>
+		<select asp-for="ModelId" class="form-select" asp-items="ViewBag.Models">
+			<option value="">-- Choisir --</option>
+		</select>
+		<span asp-validation-for="ModelId" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3 col-6">
 		<label>Nom:</label>
 		<input asp-for="Name" class="form-control" />
 		<span asp-validation-for="Name" class="text-danger"></span>
@@ -32,16 +40,42 @@
 
 	if (items != null && items.Any())
 	{
+		<div class="row">
+			<div class="col-3">
+				<span>Marque</span>
+			</div>
+			<div class="col-3">
+				<span>Modèle</span>
+			</div>
+			<div class="col-3">
+				<span>Finition</span>
+			</div>
+			<div class="col-3">
+				<span>Supprimer</span>
+			</div>
+		</div>
 		@foreach (var item in items)
 		{
-			<div class="row">
-				<div class="col-8">
+			<div class="row border-top py-2">
+				<div class="col-3">
+					@{
+						var makeName = item.CarModelViewModel?.CarMakeViewModel?.Name ?? "(Marque inconnue)";
+					}
+					<span>@makeName</span>
+				</div>
+				<div class="col-3">
+					@{
+						var modelName = item.CarModelViewModel?.Name ?? "(Modèle inconnu)";
+					}
+					<span>@modelName</span>
+				</div>
+				<div class="col-3">
 					<span>@item.Name</span>
 				</div>
-				<div class="col-4">
-					<form id="@item.Id" asp-action="Delete" asp-controller="CarTrims" method="post">
+				<div class="col-3">
+					<form id="@item.Id" asp-action="Delete" asp-controller="CarModels" method="post">
 						<input type="hidden" name="id" value="@item.Id" />
-						<button type="submit" class="btn btn-danger">"Delete"</button>
+						<button type="submit" class="btn btn-danger">Delete</button>
 					</form>
 				</div>
 			</div>
