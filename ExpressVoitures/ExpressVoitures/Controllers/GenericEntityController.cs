@@ -32,7 +32,8 @@ namespace ExpressVoitures.Controllers
         [HttpGet]
         public virtual IActionResult Create()
         {
-            ViewData[dataExistingItems] = _service.GetViewModels();
+            SetViewDatas();
+
             return View(new TViewModel());
         }
 
@@ -40,6 +41,8 @@ namespace ExpressVoitures.Controllers
         [HttpPost]
         public virtual IActionResult Create(TViewModel viewModel)
         {
+            //TODO trim name already exists for the same model and return an error message if so
+
             IEnumerable<string> modelErrors = _service.CheckModelErrors(viewModel);
 
             foreach (string error in modelErrors)
@@ -72,6 +75,12 @@ namespace ExpressVoitures.Controllers
 
             ViewData[dataExistingItems] = _service.GetViewModels();
             return RedirectToAction(nameof(Create));
+        }
+
+
+        protected virtual void SetViewDatas()
+        {
+            ViewData[dataExistingItems] = _service.GetViewModels();
         }
     }
 }

@@ -22,26 +22,6 @@ namespace ExpressVoitures.Controllers
             _carModelService = carModelService;
         }
 
-        [Authorize]
-        [HttpGet]
-        public override IActionResult Create()
-        {
-            SetViewDatas();
-
-            return View(new CarTrimViewModel());
-        }
-
-        [Authorize]
-        [HttpPost]
-        public override IActionResult Create(CarTrimViewModel viewModel)
-        {
-            SetViewDatas();
-
-            //TODO trim name already exists for the same model and return an error message if so
-
-            return base.Create(viewModel);
-        }
-
         // Endpoint pour AJAX : retourne les modèles d'une marque donnée
         [HttpGet]
         public IActionResult GetModelsByMake(int makeId)
@@ -56,7 +36,7 @@ namespace ExpressVoitures.Controllers
         }
 
 
-        private void SetViewDatas()
+        protected override void SetViewDatas()
         {
             var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
             ViewData["Makes"] = new SelectList(makes, "Id", "Name");
