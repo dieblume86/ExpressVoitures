@@ -32,17 +32,8 @@ namespace ExpressVoitures.Controllers
             var models = _carModelService.GetViewModels().OrderBy(m => m.Name);
             ViewData["Models"] = new SelectList(Enumerable.Empty<object>(), "Id", "Name");
 
-            var collection = _service.GetViewModels();
-            foreach (var item in collection)
-            {
-                var modelVm = _carModelService.GetViewModel(item.ModelId);
-                item.CarModelViewModel = modelVm ?? new CarModelViewModel { Id = 0, Name = unknownModel };
+            ViewData[dataExistingItems] = GetCarTrimsWithParents();
 
-                var makeVm = _carMakeService.GetViewModel(modelVm.MakeId);
-                item.CarModelViewModel.CarMakeViewModel = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
-            }
-            ViewData[dataExistingItems] = collection.OrderBy(m => m.CarModelViewModel?.CarMakeViewModel?.Name).ThenBy(m => m.CarModelViewModel?.Name);
-   
             return View(new CarTrimViewModel());
         }
 
@@ -56,16 +47,7 @@ namespace ExpressVoitures.Controllers
             var models = _carModelService.GetViewModels().OrderBy(m => m.Name);
             ViewData["Models"] = new SelectList(Enumerable.Empty<object>(), "Id", "Name");
 
-            var collection = _service.GetViewModels();
-            foreach (var item in collection)
-            {
-                var modelVm = _carModelService.GetViewModel(item.ModelId);
-                item.CarModelViewModel = modelVm ?? new CarModelViewModel { Id = 0, Name = unknownModel };
-
-                var makeVm = _carMakeService.GetViewModel(modelVm.MakeId);
-                item.CarModelViewModel.CarMakeViewModel = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
-            }
-            ViewData[dataExistingItems] = collection.OrderBy(m => m.CarModelViewModel?.CarMakeViewModel?.Name).ThenBy(m => m.CarModelViewModel?.Name);
+            ViewData[dataExistingItems] = GetCarTrimsWithParents();
 
             //TODO trim name already exists for the same model and return an error message if so
 
@@ -83,6 +65,24 @@ namespace ExpressVoitures.Controllers
                 .ToList();
 
             return Json(models);
+        }
+
+
+
+        private List<CarTrimViewModel> GetCarTrimsWithParents()
+        {
+            var collection = _service.GetViewModels();
+
+            foreach (var item in collection)
+            {
+                var modelVm = _carModelService.GetViewModel(item.ModelId);
+                item.CarModelViewModel = modelVm ?? new CarModelViewModel { Id = 0, Name = unknownModel };
+
+                var makeVm = _carMakeService.GetViewModel(modelVm.MakeId);
+                item.CarModelViewModel.CarMakeViewModel = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
+            }
+
+            return collection.OrderBy(m => m.CarModelViewModel?.CarMakeViewModel?.Name).ThenBy(m => m.CarModelViewModel?.Name).ThenBy(m => m.Name).ToList();
         }
     }
 }

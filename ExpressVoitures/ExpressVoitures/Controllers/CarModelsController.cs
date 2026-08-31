@@ -23,14 +23,8 @@ namespace ExpressVoitures.Controllers
         {
             var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
             ViewData["Makes"] = new SelectList(makes, "Id", "Name");
-            
-            var collection = _service.GetViewModels();
-            foreach (var item in collection)
-            {
-                var makeVm = _carMakeService.GetViewModel(item.MakeId);
-                item.CarMakeViewModel = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
-            }
-            ViewData[dataExistingItems] = collection.OrderBy(m => m.CarMakeViewModel?.Name);
+
+            ViewData[dataExistingItems] = GetCarModelsWithMakes();
 
             return View(new CarModelViewModel());
         }
@@ -42,17 +36,26 @@ namespace ExpressVoitures.Controllers
             var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
             ViewData["Makes"] = new SelectList(makes, "Id", "Name");
 
+            ViewData[dataExistingItems] = GetCarModelsWithMakes();
+
+            //TODO model name already exists for the same make and return an error message if so
+
+            return base.Create(viewModel);
+        }
+
+
+
+        private List<CarModelViewModel> GetCarModelsWithMakes()
+        {
             var collection = _service.GetViewModels();
+            
             foreach (var item in collection)
             {
                 var makeVm = _carMakeService.GetViewModel(item.MakeId);
                 item.CarMakeViewModel = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
             }
-            ViewData[dataExistingItems] = collection.OrderBy(m => m.CarMakeViewModel?.Name);
 
-            //TODO model name already exists for the same make and return an error message if so
-
-            return base.Create(viewModel);
+            return collection.OrderBy(m => m.CarMakeViewModel?.Name).ThenBy(m => m.Name).ToList();
         }
     }
 }
