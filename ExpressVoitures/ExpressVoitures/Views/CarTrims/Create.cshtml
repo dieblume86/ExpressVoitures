@@ -17,17 +17,25 @@
 <form asp-action="Create" method="post">
 	<div class="mb-3 col-6">
 		<label>Marque:</label>
-		<select asp-for="ModelId" class="form-select" asp-items="ViewBag.Models">
+		<select id="makeSelect" class="form-select" asp-items="ViewBag.Makes">
+			<option value="">-- Choisir --</option>
+		</select>
+	</div>
+
+	<div class="mb-3 col-6">
+		<label>Modèle:</label>
+		<select asp-for="ModelId" id="modelSelect" class="form-select" asp-items="ViewBag.Models">
 			<option value="">-- Choisir --</option>
 		</select>
 		<span asp-validation-for="ModelId" class="text-danger"></span>
 	</div>
 
 	<div class="mb-3 col-6">
-		<label>Nom:</label>
+		<label>Nom Trim:</label>
 		<input asp-for="Name" class="form-control" />
 		<span asp-validation-for="Name" class="text-danger"></span>
 	</div>
+
 	<div class="text-center">
 		<input class="btn btn-primary" type="submit" value="OK" />
 	</div>
@@ -85,5 +93,36 @@
 
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			var makeSelect = document.getElementById('makeSelect');
+			var modelSelect = document.getElementById('modelSelect');
+
+			function clearModels() {
+				modelSelect.innerHTML = '<option value="">-- Choisir --</option>';
+			}
+
+			makeSelect?.addEventListener('change', function () {
+				var makeId = this.value;
+				clearModels();
+				if (!makeId) return;
+
+				fetch('@Url.Action("GetModelsByMake", "CarTrims")?makeId=' + encodeURIComponent(makeId))
+					.then(function (res) { return res.json(); })
+					.then(function (data) {
+						data.forEach(function (m) {
+							var opt = document.createElement('option');
+							opt.value = m.id;
+							opt.text = m.name;
+							modelSelect.appendChild(opt);
+						});
+					})
+					.catch(function (err) { console.error(err); });
+			});
+		});
+	</script>
 }

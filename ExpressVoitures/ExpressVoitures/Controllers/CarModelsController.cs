@@ -21,19 +21,16 @@ namespace ExpressVoitures.Controllers
         [HttpGet]
         public override IActionResult Create()
         {
+            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
+            ViewData["Makes"] = new SelectList(makes, "Id", "Name");
+            
             var collection = _service.GetViewModels();
-
             foreach (var item in collection)
             {
                 var makeVm = _carMakeService.GetViewModel(item.MakeId);
                 item.CarMakeViewModel = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
             }
-
             ViewData[dataExistingItems] = collection.OrderBy(m => m.CarMakeViewModel?.Name);
-
-            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
-
-            ViewData["Makes"] = new SelectList(makes, "Id", "Name");
 
             return View(new CarModelViewModel());
         }
@@ -43,8 +40,7 @@ namespace ExpressVoitures.Controllers
         public override IActionResult Create(CarModelViewModel viewModel)
         {
             var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
-
-            ViewData["Makes"] = new SelectList(makes, "Id", "Name", viewModel?.MakeId);
+            ViewData["Makes"] = new SelectList(makes, "Id", "Name");
 
             var collection = _service.GetViewModels();
             foreach (var item in collection)
@@ -52,7 +48,6 @@ namespace ExpressVoitures.Controllers
                 var makeVm = _carMakeService.GetViewModel(item.MakeId);
                 item.CarMakeViewModel = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
             }
-
             ViewData[dataExistingItems] = collection.OrderBy(m => m.CarMakeViewModel?.Name);
 
             //TODO model name already exists for the same make and return an error message if so

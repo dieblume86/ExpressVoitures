@@ -26,8 +26,13 @@ namespace ExpressVoitures.Controllers
         [HttpGet]
         public override IActionResult Create()
         {
-            var collection = _service.GetViewModels();
+            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
+            ViewData["Makes"] = new SelectList(makes, "Id", "Name");
 
+            var models = _carModelService.GetViewModels().OrderBy(m => m.Name);
+            ViewData["Models"] = new SelectList(Enumerable.Empty<object>(), "Id", "Name");
+
+            var collection = _service.GetViewModels();
             foreach (var item in collection)
             {
                 var modelVm = _carModelService.GetViewModel(item.ModelId);
@@ -36,13 +41,8 @@ namespace ExpressVoitures.Controllers
                 var makeVm = _carMakeService.GetViewModel(modelVm.MakeId);
                 item.CarModelViewModel.CarMakeViewModel = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
             }
-
             ViewData[dataExistingItems] = collection.OrderBy(m => m.CarModelViewModel?.CarMakeViewModel?.Name).ThenBy(m => m.CarModelViewModel?.Name);
-
-            var models = _carModelService.GetViewModels().OrderBy(m => m.Name);
-
-            ViewData["Models"] = new SelectList(models, "Id", "Name");
-
+   
             return View(new CarTrimViewModel());
         }
 
@@ -50,9 +50,11 @@ namespace ExpressVoitures.Controllers
         [HttpPost]
         public override IActionResult Create(CarTrimViewModel viewModel)
         {
-            var models = _carModelService.GetViewModels().OrderBy(m => m.Name);
+            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
+            ViewData["Makes"] = new SelectList(makes, "Id", "Name");
 
-            ViewData["Models"] = new SelectList(models, "Id", "Name", viewModel?.ModelId);
+            var models = _carModelService.GetViewModels().OrderBy(m => m.Name);
+            ViewData["Models"] = new SelectList(Enumerable.Empty<object>(), "Id", "Name");
 
             var collection = _service.GetViewModels();
             foreach (var item in collection)
@@ -63,12 +65,24 @@ namespace ExpressVoitures.Controllers
                 var makeVm = _carMakeService.GetViewModel(modelVm.MakeId);
                 item.CarModelViewModel.CarMakeViewModel = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
             }
-
             ViewData[dataExistingItems] = collection.OrderBy(m => m.CarModelViewModel?.CarMakeViewModel?.Name).ThenBy(m => m.CarModelViewModel?.Name);
 
             //TODO trim name already exists for the same model and return an error message if so
 
             return base.Create(viewModel);
+        }
+
+        // Endpoint pour AJAX : retourne les modèles d'une marque donnée
+        [HttpGet]
+        public IActionResult GetModelsByMake(int makeId)
+        {
+            var models = _carModelService.GetViewModels()
+                .Where(m => m.MakeId == makeId)
+                .OrderBy(m => m.Name)
+                .Select(m => new { id = m.Id, name = m.Name })
+                .ToList();
+
+            return Json(models);
         }
     }
 }
