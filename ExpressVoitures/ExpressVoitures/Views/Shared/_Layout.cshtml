@@ -27,17 +27,18 @@
 						{
 							<li class="nav-item">
 
-								<a class="nav-link" asp-action="Create" asp-controller="CarMakes">+ Marque</a>
+								<a class="nav-link" asp-action="Create" asp-controller="CarMakes">+Marque</a>
 							</li>
 							<li class="nav-item">
 
-								<a class="nav-link" asp-action="Create" asp-controller="CarModels">+ Modèle</a>
+								<a class="nav-link" asp-action="Create" asp-controller="CarModels">+Modèle</a>
 							</li>
 							<li class="nav-item">
 
-								<a class="nav-link" asp-action="Create" asp-controller="CarTrims">+ Finition</a>
+								<a class="nav-link" asp-action="Create" asp-controller="CarTrims">+Finition</a>
 							</li>
 						}
+
 						<li class="nav-item">
 							@if (User?.Identity?.IsAuthenticated == true)
 							{

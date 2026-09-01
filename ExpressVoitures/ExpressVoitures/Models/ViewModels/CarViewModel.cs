@@ -18,10 +18,14 @@ namespace ExpressVoitures.Models.ViewModels
         [Required(ErrorMessage = "MissingMakeId")]
         public int MakeId { get; set; }
 
-         [Required(ErrorMessage = "MissingModelId")]
+        [Required(ErrorMessage = "MissingModelId")]
         public int ModelId { get; set; }
 
-         [Required(ErrorMessage = "MissingTrimId")]
+        [Required(ErrorMessage = "MissingTrimId")]
         public int TrimId { get; set; }
+
+
+        [BindNever]
+        public CarTrimViewModel? CarTrimViewModel { get; set; }
     }
 }

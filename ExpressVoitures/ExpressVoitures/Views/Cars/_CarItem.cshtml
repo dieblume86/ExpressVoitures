@@ -4,7 +4,10 @@
 
 <div class="row car-item">
 	<div class="col-md-12 col-lg-8 bg-secondary rounded-3">
-		<img src="~/images/carImagePlaceHolder.JPG" />
+		<a asp-action="SingleCar" asp-controller="Cars" asp-route-id="@Model.Id">
+			<img src="~/images/carImagePlaceHolder.JPG" />
+		</a>
+
 	</div>
 	<div class="col-md-12 col-lg-4 bg-light d-flex align-items-center py">
 		<ul class="listNoType">

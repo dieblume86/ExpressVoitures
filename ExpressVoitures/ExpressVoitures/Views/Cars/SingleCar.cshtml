@@ -1,0 +1,12 @@
+﻿@model ExpressVoitures.Models.ViewModels.CarViewModel
+
+<link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+
+@{
+	ViewData["Title"] = "Test";
+}
+
+<a asp-action="Index" asp-controller="Cars">
+	Retour à la liste</a>
+
+@await Html.PartialAsync("_CarItem", Model)
