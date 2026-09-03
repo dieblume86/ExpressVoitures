@@ -31,10 +31,10 @@ namespace ExpressVoitures.Controllers
             foreach (var item in collection)
             {
                 var makeVm = _carMakeService.GetViewModel(item.MakeId);
-                item.CarMakeViewModel = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
+                item.Make = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
             }
 
-            return collection.OrderBy(m => m.CarMakeViewModel?.Name).ThenBy(m => m.Name).ToList();
+            return collection.OrderBy(m => m.Make?.Name).ThenBy(m => m.Name).ToList();
         }
     }
 }

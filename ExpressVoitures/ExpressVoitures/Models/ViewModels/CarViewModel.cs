@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using ExpressVoitures.Models.Entities;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace ExpressVoitures.Models.ViewModels
@@ -26,6 +27,14 @@ namespace ExpressVoitures.Models.ViewModels
 
 
         [BindNever]
-        public CarTrimViewModel? CarTrimViewModel { get; set; }
+        public CarMakeViewModel? Make { get; set; }
+        [BindNever]
+        public CarModelViewModel? Model { get; set; }
+        [BindNever]
+        public CarTrimViewModel? Trim { get; set; }
+        [BindNever]
+        public CarSaleViewModel? Sale { get; set; }
+        [BindNever]
+        public ICollection<RepairViewModel> Repairs { get; set; } = new HashSet<RepairViewModel>();
     }
 }

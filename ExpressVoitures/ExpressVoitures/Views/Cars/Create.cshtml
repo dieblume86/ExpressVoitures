@@ -47,6 +47,71 @@
 	</div>
 </form>
 
+@{
+	var items = ViewData["ExistingItems"] as IEnumerable<ExpressVoitures.Models.ViewModels.CarViewModel>;
+
+	<h4>Voitures existantes</h4>
+
+	if (items != null && items.Any())
+	{
+		<div class="row">
+			<div class="col-2">
+				<span>VIN code</span>
+			</div>
+			<div class="col-2">
+				<span>Année</span>
+			</div>
+			<div class="col-2">
+				<span>Marque</span>
+			</div>
+			<div class="col-2">
+				<span>Modèle</span>
+			</div>
+			<div class="col-2">
+				<span>Finition</span>
+			</div>
+			<div class="col-2">
+				<span>Supprimer</span>
+			</div>
+		</div>
+		@foreach (var item in items)
+		{
+			<div class="row border-top py-2">
+				<div class="col-2">
+					<span>@item.VinCode</span>
+				</div>
+				<div class="col-2">
+					<span>@item.Year</span>
+				</div>
+				<div class="col-2">
+					@{
+						var makeName = item.Model?.Make?.Name ?? "(Marque inconnue)";
+					}
+					<span>@makeName</span>
+				</div>
+				<div class="col-2">
+					@{
+						var modelName = item.Model?.Name ?? "(Modèle inconnu)";
+					}
+					<span>@modelName</span>
+				</div>
+				<div class="col-2">
+					@{
+						var trimName = item.Trim?.Name ?? "(Finition inconnue)";
+					}
+					<span>@trimName</span>
+				</div>
+				<div class="col-2">
+					<form id="@item.Id" asp-action="Delete" asp-controller="CarModels" method="post">
+						<input type="hidden" name="id" value="@item.Id" />
+						<button type="submit" class="btn btn-danger">Delete</button>
+					</form>
+				</div>
+			</div>
+		}
+	}
+}
+
 @section Scripts {
 	@{
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");

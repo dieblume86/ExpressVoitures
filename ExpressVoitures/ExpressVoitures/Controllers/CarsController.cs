@@ -25,10 +25,15 @@ namespace ExpressVoitures.Controllers
             _carTrimService = carTrimService;
         }
 
-        [HttpGet]
-        public virtual IActionResult SingleCar(CarViewModel viewModel)
+        public override IActionResult Index()
         {
-            return View(viewModel);
+            return View(GetCars());
+        }
+
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            return View("Details", GetCar(id));
         }
 
         // Endpoint for AJAX
@@ -43,7 +48,6 @@ namespace ExpressVoitures.Controllers
 
             return Json(models);
         }
-        
         // Endpoint for AJAX
         [HttpGet]
         public IActionResult GetTrimsByModel(int modelId)
@@ -74,7 +78,7 @@ namespace ExpressVoitures.Controllers
             {
                 _service.Add(viewModel);
 
-                return RedirectToAction(nameof(SingleCar), viewModel);
+                return RedirectToAction(nameof(Details), viewModel.Id);
             }
             else
             {
@@ -94,29 +98,44 @@ namespace ExpressVoitures.Controllers
             var trims = _carTrimService.GetViewModels().OrderBy(m => m.Name);
             ViewData["Trims"] = new SelectList(Enumerable.Empty<object>(), "Id", "Name");
 
-            ViewData[dataExistingItems] = GetCarTrimsWithParents();
+            ViewData[dataExistingItems] = GetCars().OrderBy(m => m.Trim?.Model?.Make?.Name)
+                .ThenBy(m => m.Trim?.Model?.Name)
+                .ThenBy(m => m.Trim?.Name)
+                .ToList();
         }
-        private List<CarViewModel> GetCarTrimsWithParents()
+        private List<CarViewModel> GetCars()
         {
-            var collection = _service.GetViewModels();
+            var cars = _service.GetViewModels().ToList();
 
-            foreach (var item in collection)
+            var makes = _carMakeService.GetViewModels().ToDictionary(m => m.Id);
+            var models = _carModelService.GetViewModels().ToDictionary(m => m.Id);
+            var trims = _carTrimService.GetViewModels().ToDictionary(t => t.Id);
+
+            foreach (var car in cars)
             {
-                var trimVm = _carTrimService.GetViewModel(item.TrimId);
-                item.CarTrimViewModel = trimVm ?? new CarTrimViewModel { Id = 0, Name = unknownTrim };
+                makes.TryGetValue(car.MakeId, out var makeVm);
+                models.TryGetValue(car.ModelId, out var modelVm);
+                trims.TryGetValue(car.TrimId, out var trimVm);
 
-                var modelVm = _carModelService.GetViewModel(trimVm.ModelId);
-                item.CarTrimViewModel.CarModelViewModel = modelVm ?? new CarModelViewModel { Id = 0, Name = unknownModel };
-
-                var makeVm = _carMakeService.GetViewModel(modelVm.MakeId);
-                item.CarTrimViewModel.CarModelViewModel.CarMakeViewModel = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
+                car.Make = makeVm;
+                car.Model = modelVm;
+                car.Trim = trimVm;
             }
 
-            return collection
-                .OrderBy(m => m.CarTrimViewModel?.CarModelViewModel?.CarMakeViewModel?.Name)
-                .ThenBy(m => m.CarTrimViewModel?.CarModelViewModel?.Name)
-                .ThenBy(m => m.CarTrimViewModel?.Name)
-                .ToList();
+            return cars;
+        }
+        private CarViewModel GetCar(int id)
+        {
+            var vm = _service.GetViewModel(id);
+
+            if (vm == null)
+                return new CarViewModel();
+
+            vm.Trim = _carTrimService.GetViewModel(vm.TrimId);
+            vm.Model = _carModelService.GetViewModel(vm.ModelId);
+            vm.Make = _carMakeService.GetViewModel(vm.MakeId);
+
+            return vm;
         }
     }
 }

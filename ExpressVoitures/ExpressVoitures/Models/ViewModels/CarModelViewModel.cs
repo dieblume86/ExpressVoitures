@@ -16,6 +16,6 @@ namespace ExpressVoitures.Models.ViewModels
 
 
         [BindNever]
-        public CarMakeViewModel? CarMakeViewModel { get; set; }
+        public CarMakeViewModel? Make { get; set; }
     }
 }

@@ -53,13 +53,13 @@ namespace ExpressVoitures.Controllers
             foreach (var item in collection)
             {
                 var modelVm = _carModelService.GetViewModel(item.ModelId);
-                item.CarModelViewModel = modelVm ?? new CarModelViewModel { Id = 0, Name = unknownModel };
+                item.Model = modelVm ?? new CarModelViewModel { Id = 0, Name = unknownModel };
 
                 var makeVm = _carMakeService.GetViewModel(modelVm.MakeId);
-                item.CarModelViewModel.CarMakeViewModel = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
+                item.Model.Make = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
             }
 
-            return collection.OrderBy(m => m.CarModelViewModel?.CarMakeViewModel?.Name).ThenBy(m => m.CarModelViewModel?.Name).ThenBy(m => m.Name).ToList();
+            return collection.OrderBy(m => m.Model?.Make?.Name).ThenBy(m => m.Model?.Name).ThenBy(m => m.Name).ToList();
         }
     }
 }

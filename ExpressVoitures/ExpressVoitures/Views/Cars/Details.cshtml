@@ -1,48 +1,11 @@
-﻿@model ExpressVoitures.Models.Entities.Car
+﻿@model ExpressVoitures.Models.ViewModels.CarViewModel
+
+<link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
 
 @{
-    ViewData["Title"] = "Details";
+	ViewData["Title"] = "Test";
 }
 
-<h1>Details</h1>
+<a asp-action="Index" asp-controller="Cars">Retour à la liste</a>
 
-<div>
-    <h4>Car</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VinCode)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VinCode)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Year)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Year)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Make)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Make.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Model)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Model.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Trim)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Trim.Id)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+@await Html.PartialAsync("_CarDetails", Model)

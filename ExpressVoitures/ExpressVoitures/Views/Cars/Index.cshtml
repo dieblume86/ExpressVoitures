@@ -23,13 +23,13 @@
 			{
 				<div class="row gy-3">
 					<div class="col-md-12 col-lg-6 px-lg-3">
-						@await Html.PartialAsync("_CarItem", Model.ElementAt(i))
+						@await Html.PartialAsync("_CarDetails", Model.ElementAt(i))
 					</div>
 
 					@if (i + 1 < Model.Count())
 					{
 						<div class="col-md-12 col-lg-6 px-lg-3">
-							@await Html.PartialAsync("_CarItem", Model.ElementAt(i + 1))
+							@await Html.PartialAsync("_CarDetails", Model.ElementAt(i + 1))
 						</div>
 					}
 				</div>
