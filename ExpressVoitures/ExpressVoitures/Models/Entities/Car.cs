@@ -5,8 +5,9 @@
         public int Id { get; set; }
         public string? VinCode { get; set; }
         public int Year { get; set; }
+        public string? PicturePath { get; set; }
 
-
+         
 
         public int? MakeId { get; set; }
         public int? ModelId { get; set; }

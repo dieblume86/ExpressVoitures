@@ -7,7 +7,8 @@
 
 @await Html.PartialAsync("_ErrorCreateDelete")
 
-<form asp-action="Create" method="post">
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+	@Html.AntiForgeryToken()
 	<div class="row">
 		<div class="mb-3 col-6">
 			<label>Marque:</label>
@@ -44,19 +45,20 @@
 			<a class="button-square" asp-action="Create" asp-controller="CarTrims">+</a>
 		</div>
 	</div>
-
-
-
 	<div class="mb-3 col-6">
 		<label>VIN code:</label>
 		<input asp-for="VinCode" class="form-control" />
 		<span asp-validation-for="VinCode" class="text-danger"></span>
 	</div>
-
 	<div class="mb-3 col-6">
 		<label>Année :</label>
 		<input asp-for="Year" class="form-control" />
 		<span asp-validation-for="Year" class="text-danger"></span>
+	</div>
+	<div class="mb-3 col-6">
+		<label>Photo (jpg/png, max 5MB) :</label>
+		<input asp-for="PictureFile" type="file" class="form-control" accept=".jpg,.jpeg,.png,.gif" />
+		<span asp-validation-for="PictureFile" class="text-danger"></span>
 	</div>
 
 	<div class="text-center">

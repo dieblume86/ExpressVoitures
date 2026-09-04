@@ -59,8 +59,8 @@ namespace ExpressVoitures.Controllers
             }
             else
             {
-                SetViewDatas();
-                return View(viewModel);
+                TempData["Error"] = "Une erreur est survenue.";
+                return RedirectToAction(nameof(Create));
             }
         }
 

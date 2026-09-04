@@ -4,6 +4,7 @@ using ExpressVoitures.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.IO;
 
 namespace ExpressVoitures.Controllers
 {
@@ -35,6 +36,34 @@ namespace ExpressVoitures.Controllers
         {
             return View("Details", GetCar(id));
         }
+        [HttpGet]
+        public IActionResult GetPicture(int id)
+        {
+            var vm = _service.GetViewModel(id);
+            if (vm == null)
+                return NotFound();
+
+            var path = vm.PicturePath;
+            if (string.IsNullOrEmpty(path) || !System.IO.File.Exists(path))
+                return NotFound();
+
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var allowedFolder = System.IO.Path.GetFullPath(System.IO.Path.Combine(userProfile, "AppData", "LocalLow", "ExpressVoitures"));
+            var fullPath = System.IO.Path.GetFullPath(path);
+            if (!fullPath.StartsWith(allowedFolder, StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest();
+            }
+
+            var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
+            if (!provider.TryGetContentType(fullPath, out var contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+
+            var stream = System.IO.File.OpenRead(fullPath);
+            return File(stream, contentType);
+        }
 
         // Endpoint for AJAX
         [HttpGet]
@@ -65,7 +94,44 @@ namespace ExpressVoitures.Controllers
         [HttpPost]
         public override IActionResult Create(CarViewModel viewModel)
         {
-            //TODO trim name already exists for the same model and return an error message if so
+            if (viewModel.PictureFile != null && viewModel.PictureFile.Length > 0)
+            {
+                var allowed = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                var ext = Path.GetExtension(viewModel.PictureFile.FileName)?.ToLowerInvariant();
+                if (string.IsNullOrEmpty(ext) || !allowed.Contains(ext))
+                {
+                    ModelState.AddModelError("PhotoFile", "Type de fichier non autorisé. Utilisez jpg/png/gif.");
+                }
+                else if (viewModel.PictureFile.Length > 5 * 1024 * 1024)
+                {
+                    ModelState.AddModelError("PhotoFile", "Fichier trop volumineux (max 5MB).");
+                }
+                else
+                {
+                    try
+                    {
+                        var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                        var folder = Path.Combine(userProfile, "AppData", "LocalLow", "ExpressVoitures");
+
+                        if (!Directory.Exists(folder))
+                            Directory.CreateDirectory(folder);
+
+                        var fileName = $"{Guid.NewGuid()}{ext}";
+                        var fullPath = Path.Combine(folder, fileName);
+
+                        using (var stream = new FileStream(fullPath, FileMode.Create))
+                        {
+                            viewModel.PictureFile.CopyTo(stream);
+                        }
+
+                        viewModel.PicturePath = fullPath;
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("PhotoFile", "Impossible d'enregistrer l'image : " + ex.Message);
+                    }
+                }
+            }
 
             IEnumerable<string> modelErrors = _service.CheckModelErrors(viewModel);
 
@@ -78,12 +144,13 @@ namespace ExpressVoitures.Controllers
             {
                 _service.Add(viewModel);
 
-                return RedirectToAction(nameof(Details), viewModel.Id);
+                TempData["Success"] = "Success.";
+                return RedirectToAction(nameof(Details), viewModel);
             }
             else
             {
-                SetViewDatas();
-                return View(viewModel);
+                TempData["Error"] = "Une erreur est survenue.";
+                return RedirectToAction(nameof(Create));
             }
         }
 

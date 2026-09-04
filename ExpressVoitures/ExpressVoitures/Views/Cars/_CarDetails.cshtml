@@ -2,10 +2,18 @@
 
 <link rel="stylesheet" href="~/css/carItem.css" asp-append-version="true" />
 
+@{
+    var placeholder = Url.Content("~/images/carImagePlaceHolder.JPG");
+    var pictureUrl = Url.Action("GetPicture", "Cars", new { id = Model.Id });
+}
+
 <a asp-controller="Cars" asp-action="Details" asp-route-id="@Model.Id" class="text-decoration-none text-dark">
 	<div class="row car-item">
 		<div class="col-md-12 col-lg-8 bg-secondary rounded-3">
-			<img src="~/images/carImagePlaceHolder.JPG" />
+			<img src="@pictureUrl"
+				 alt="Photo voiture"
+				 class="img-fluid"
+				 onerror="this.src='@placeholder'; this.onerror=null;" />
 		</div>
 		<div class="col-md-12 col-lg-4 bg-light d-flex align-items-center py">
 			<ul class="listNoType">

@@ -15,6 +15,10 @@ namespace ExpressVoitures.Models.ViewModels
         [Required(ErrorMessage = "MissingYear")]
         public int Year { get; set; }
 
+        public string? PicturePath { get; set; }
+        public IFormFile? PictureFile { get; set; }
+
+    
 
         [Required(ErrorMessage = "MissingMakeId")]
         public int MakeId { get; set; }

@@ -4,6 +4,7 @@ using ExpressVoitures.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpressVoitures.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260904190559_Car picture")]
+    partial class Carpicture
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,7 +59,7 @@ namespace ExpressVoitures.Data.Migrations
 
                     b.HasIndex("TrimId");
 
-                    b.ToTable("Cars", (string)null);
+                    b.ToTable("Cars");
                 });
 
             modelBuilder.Entity("ExpressVoitures.Models.Entities.CarMake", b =>
@@ -72,7 +75,7 @@ namespace ExpressVoitures.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CarMakes", (string)null);
+                    b.ToTable("CarMakes");
                 });
 
             modelBuilder.Entity("ExpressVoitures.Models.Entities.CarModel", b =>
@@ -93,7 +96,7 @@ namespace ExpressVoitures.Data.Migrations
 
                     b.HasIndex("MakeId");
 
-                    b.ToTable("CarModels", (string)null);
+                    b.ToTable("CarModels");
                 });
 
             modelBuilder.Entity("ExpressVoitures.Models.Entities.CarSale", b =>
@@ -127,7 +130,7 @@ namespace ExpressVoitures.Data.Migrations
                     b.HasIndex("CarId")
                         .IsUnique();
 
-                    b.ToTable("CarSales", (string)null);
+                    b.ToTable("CarSales");
                 });
 
             modelBuilder.Entity("ExpressVoitures.Models.Entities.CarTrim", b =>
@@ -148,7 +151,7 @@ namespace ExpressVoitures.Data.Migrations
 
                     b.HasIndex("ModelId");
 
-                    b.ToTable("CarTrims", (string)null);
+                    b.ToTable("CarTrims");
                 });
 
             modelBuilder.Entity("ExpressVoitures.Models.Entities.Repair", b =>
@@ -172,7 +175,7 @@ namespace ExpressVoitures.Data.Migrations
 
                     b.HasIndex("CarId");
 
-                    b.ToTable("Repairs", (string)null);
+                    b.ToTable("Repairs");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
