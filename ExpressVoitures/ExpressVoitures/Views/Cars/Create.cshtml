@@ -6,29 +6,44 @@
 <div><p>Créer une nouvelle voiture</p></div>
 
 <form asp-action="Create" method="post">
-	<div class="mb-3 col-6">
-		<label>Marque:</label>
-		<select asp-for="MakeId" id="makeSelect" class="form-select" asp-items="ViewBag.Makes">
-			<option value="">-- Choisir --</option>
-		</select>
-		<span asp-validation-for="MakeId" class="text-danger"></span>
+	<div class="row">
+		<div class="mb-3 col-6">
+			<label>Marque:</label>
+			<select asp-for="MakeId" id="makeSelect" class="form-select" asp-items="ViewBag.Makes">
+				<option value="">-- Choisir --</option>
+			</select>
+			<span asp-validation-for="MakeId" class="text-danger"></span>
+		</div>
+		<div class="mb-3 col-2">
+			<a class="button-square" asp-action="Create" asp-controller="CarMakes">+</a>
+		</div>
+	</div>
+	<div class="row">
+		<div class="mb-3 col-6">
+			<label>Modèle:</label>
+			<select asp-for="ModelId" id="modelSelect" class="form-select" asp-items="ViewBag.Models">
+				<option value="">-- Choisir --</option>
+			</select>
+			<span asp-validation-for="ModelId" class="text-danger"></span>
+		</div>
+		<div class="mb-3 col-2">
+			<a class="button-square" asp-action="Create" asp-controller="CarModels">+</a>
+		</div>
+	</div>
+	<div class="row">
+		<div class="mb-3 col-6">
+			<label>Finition:</label>
+			<select asp-for="TrimId" id="trimSelect" class="form-select" asp-items="ViewBag.Trims">
+				<option value="">-- Choisir --</option>
+			</select>
+			<span asp-validation-for="TrimId" class="text-danger"></span>
+		</div>
+		<div class="mb-3 col-2">
+			<a class="button-square" asp-action="Create" asp-controller="CarTrims">+</a>
+		</div>
 	</div>
 
-	<div class="mb-3 col-6">
-		<label>Modèle:</label>
-		<select asp-for="ModelId" id="modelSelect" class="form-select" asp-items="ViewBag.Models">
-			<option value="">-- Choisir --</option>
-		</select>
-		<span asp-validation-for="ModelId" class="text-danger"></span>
-	</div>
 
-	<div class="mb-3 col-6">
-		<label>Finition:</label>
-		<select asp-for="TrimId" id="trimSelect" class="form-select" asp-items="ViewBag.Trims">
-			<option value="">-- Choisir --</option>
-		</select>
-		<span asp-validation-for="TrimId" class="text-danger"></span>
-	</div>
 
 	<div class="mb-3 col-6">
 		<label>VIN code:</label>
@@ -102,7 +117,7 @@
 					<span>@trimName</span>
 				</div>
 				<div class="col-2">
-					<form id="@item.Id" asp-action="Delete" asp-controller="CarModels" method="post">
+					<form id="@item.Id" asp-action="Delete" asp-controller="Cars" method="post">
 						<input type="hidden" name="id" value="@item.Id" />
 						<button type="submit" class="btn btn-danger">Delete</button>
 					</form>
