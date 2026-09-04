@@ -5,6 +5,8 @@
 }
 <div><p>Créer une nouvelle voiture</p></div>
 
+@await Html.PartialAsync("_ErrorCreateDelete")
+
 <form asp-action="Create" method="post">
 	<div class="row">
 		<div class="mb-3 col-6">

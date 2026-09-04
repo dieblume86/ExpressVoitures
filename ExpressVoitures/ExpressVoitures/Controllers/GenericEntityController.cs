@@ -1,6 +1,7 @@
 ﻿using ExpressVoitures.Models.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpressVoitures.Controllers
 {
@@ -65,14 +66,24 @@ namespace ExpressVoitures.Controllers
 
         [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public virtual IActionResult Delete(int id)
         {
-            //_service.Delete(id);
-            //return View();
-            ////return RedirectToAction("Admin");
-            _service.Delete(id);
+            try
+            {
+                _service.Delete(id);
+                TempData["Success"] = "La marque a été supprimée.";
+            }
+            catch (DbUpdateException)
+            {
+                // Erreur typique : contrainte FK (des modèles/voitures liées)
+                TempData["Error"] = "Impossible de supprimer cette marque : des enregistrements liés existent.";
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Une erreur est survenue lors de la suppression.";
+            }
 
-            ViewData[dataExistingItems] = _service.GetViewModels();
             return RedirectToAction(nameof(Create));
         }
 

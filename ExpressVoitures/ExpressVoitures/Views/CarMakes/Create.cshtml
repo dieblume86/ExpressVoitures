@@ -8,12 +8,9 @@
 
 <h4>CarMake</h4>
 <hr />
-@if (TempData["Success"] != null)
-{
-	<div class="mt-3 alert alert-success" role="alert">
-		@TempData["Success"]
-	</div>
-}
+
+@await Html.PartialAsync("_ErrorCreateDelete")
+
 <form asp-action="Create" method="post">
 	<div class="mb-3 col-6">
 		<label>Nom:</label>
