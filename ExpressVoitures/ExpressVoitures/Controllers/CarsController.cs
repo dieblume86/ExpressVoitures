@@ -19,6 +19,9 @@ namespace ExpressVoitures.Controllers
         private readonly ICarTrimService _carTrimService;
         private const string unknownTrim = "Finition inconnue";
 
+        private readonly string pictureFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "ExpressVoitures");
+        //C:\Users\Megaport\AppData\LocalLow\ExpressVoitures\185d3bed-0b25-4995-8ce8-68454bf50882.png
+
         public CarsController(ICarService carService, ICarMakeService carMakeService, ICarModelService carModelService, ICarTrimService carTrimService) : base(carService)
         {
             _carMakeService = carMakeService;
@@ -40,15 +43,14 @@ namespace ExpressVoitures.Controllers
         public IActionResult GetPicture(int id)
         {
             var vm = _service.GetViewModel(id);
-            if (vm == null)
+            if (vm == null || string.IsNullOrEmpty(vm.PictureId))
                 return NotFound();
 
-            var path = vm.PicturePath;
-            if (string.IsNullOrEmpty(path) || !System.IO.File.Exists(path))
+            var path = Path.Combine(pictureFolderPath, vm.PictureId);
+            if (!System.IO.File.Exists(path))
                 return NotFound();
 
-            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var allowedFolder = System.IO.Path.GetFullPath(System.IO.Path.Combine(userProfile, "AppData", "LocalLow", "ExpressVoitures"));
+            var allowedFolder = System.IO.Path.GetFullPath(pictureFolderPath);
             var fullPath = System.IO.Path.GetFullPath(path);
             if (!fullPath.StartsWith(allowedFolder, StringComparison.OrdinalIgnoreCase))
             {
@@ -111,20 +113,18 @@ namespace ExpressVoitures.Controllers
                     try
                     {
                         var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                        var folder = Path.Combine(userProfile, "AppData", "LocalLow", "ExpressVoitures");
 
-                        if (!Directory.Exists(folder))
-                            Directory.CreateDirectory(folder);
+                        if (!Directory.Exists(pictureFolderPath))
+                            Directory.CreateDirectory(pictureFolderPath);
 
                         var fileName = $"{Guid.NewGuid()}{ext}";
-                        var fullPath = Path.Combine(folder, fileName);
-
+                        var fullPath = Path.Combine(pictureFolderPath, fileName);
                         using (var stream = new FileStream(fullPath, FileMode.Create))
                         {
                             viewModel.PictureFile.CopyTo(stream);
                         }
 
-                        viewModel.PicturePath = fullPath;
+                        viewModel.PictureId = fileName;
                     }
                     catch (Exception ex)
                     {
