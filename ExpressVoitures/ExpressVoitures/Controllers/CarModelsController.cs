@@ -1,4 +1,5 @@
 ﻿using ExpressVoitures.Models.Entities;
+using ExpressVoitures.Models.Services;
 using ExpressVoitures.Models.Services.Interfaces;
 using ExpressVoitures.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -15,6 +16,19 @@ namespace ExpressVoitures.Controllers
         public CarModelsController(ICarModelService carModelService, ICarMakeService carMakeService) : base(carModelService)
         {
             _carMakeService = carMakeService;
+        }
+
+        // Endpoint pour AJAX : retourne les modèles d'une marque donnée
+        [HttpGet]
+        public IActionResult GetModelsByMake(int makeId)
+        {
+            var models = _service.GetViewModels()
+                .Where(m => m.MakeId == makeId)
+                .OrderBy(m => m.Name)
+                .Select(m => new { id = m.Id, name = m.Name })
+                .ToList();
+
+            return Json(models);
         }
 
         protected override void SetViewDatas()

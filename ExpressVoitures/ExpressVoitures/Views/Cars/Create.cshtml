@@ -1,4 +1,5 @@
-﻿@model ExpressVoitures.Models.ViewModels.CarViewModel
+﻿@using ExpressVoitures.Helpers 
+@model ExpressVoitures.Models.ViewModels.CarViewModel
 
 @{
 	ViewData["Title"] = "Create";
@@ -67,7 +68,7 @@
 </form>
 
 @{
-	var items = ViewData["ExistingItems"] as IEnumerable<ExpressVoitures.Models.ViewModels.CarViewModel>;
+	var items = ViewData[ViewDataKeys.ExistingItems] as IEnumerable<ExpressVoitures.Models.ViewModels.CarViewModel>;
 
 	<h4>Voitures existantes</h4>
 
@@ -156,7 +157,7 @@
 				clearTrims();
 				if (!makeId) return;
 
-				fetch('@Url.Action("GetModelsByMake", "Cars")?makeId=' + encodeURIComponent(makeId))
+				fetch('@Url.Action("GetModelsByMake", "CarModels")?makeId=' + encodeURIComponent(makeId))
 					.then(function (res) { return res.json(); })
 					.then(function (data) {
 						data.forEach(function (m) {
@@ -174,7 +175,7 @@
 				clearTrims();
 				if (!modelId) return;
 
-				fetch('@Url.Action("GetTrimsByModel", "Cars")?modelId=' + encodeURIComponent(modelId))
+				fetch('@Url.Action("GetTrimsByModel", "CarTrims")?modelId=' + encodeURIComponent(modelId))
 					.then(function (res) { return res.json(); })
 					.then(function (data) {
 						data.forEach(function (m) {

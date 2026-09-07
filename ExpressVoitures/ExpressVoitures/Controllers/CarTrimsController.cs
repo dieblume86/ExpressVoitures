@@ -22,17 +22,17 @@ namespace ExpressVoitures.Controllers
             _carModelService = carModelService;
         }
 
-        // Endpoint pour AJAX : retourne les modèles d'une marque donnée
+        // Endpoint for AJAX
         [HttpGet]
-        public IActionResult GetModelsByMake(int makeId)
+        public IActionResult GetTrimsByModel(int modelId)
         {
-            var models = _carModelService.GetViewModels()
-                .Where(m => m.MakeId == makeId)
-                .OrderBy(m => m.Name)
-                .Select(m => new { id = m.Id, name = m.Name })
+            var trims = _service.GetViewModels()
+                .Where(t => t.ModelId == modelId)
+                .OrderBy(t => t.Name)
+                .Select(t => new { id = t.Id, name = t.Name })
                 .ToList();
 
-            return Json(models);
+            return Json(trims);
         }
 
 

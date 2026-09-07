@@ -67,31 +67,6 @@ namespace ExpressVoitures.Controllers
             return File(stream, contentType);
         }
 
-        // Endpoint for AJAX
-        [HttpGet]
-        public IActionResult GetModelsByMake(int makeId)
-        {
-            var models = _carModelService.GetViewModels()
-                .Where(m => m.MakeId == makeId)
-                .OrderBy(m => m.Name)
-                .Select(m => new { id = m.Id, name = m.Name })
-                .ToList();
-
-            return Json(models);
-        }
-        // Endpoint for AJAX
-        [HttpGet]
-        public IActionResult GetTrimsByModel(int modelId)
-        {
-            var trims = _carTrimService.GetViewModels()
-                .Where(t => t.ModelId == modelId)
-                .OrderBy(t => t.Name)
-                .Select(t => new { id = t.Id, name = t.Name })
-                .ToList();
-
-            return Json(trims);
-        }
-
         [Authorize]
         [HttpPost]
         public override IActionResult Create(CarViewModel viewModel)

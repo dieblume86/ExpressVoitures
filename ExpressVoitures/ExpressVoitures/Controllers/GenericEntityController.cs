@@ -1,4 +1,5 @@
-﻿using ExpressVoitures.Models.Services.Interfaces;
+﻿using ExpressVoitures.Helpers;
+using ExpressVoitures.Models.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,8 @@ namespace ExpressVoitures.Controllers
     {
         protected readonly TService _service;
 
-        protected const string dataExistingItems = "ExistingItems";
+        protected const string dataExistingItems = ViewDataKeys.ExistingItems;
+
 
         public GenericEntityController(TService service)
         {
