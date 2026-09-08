@@ -1,0 +1,39 @@
+@model ExpressVoitures.Models.ViewModels.CarModelViewModel
+
+@{
+	ViewData["Title"] = "Edit";
+}
+
+<h1>Modifier le modèle</h1>
+
+@await Html.PartialAsync("_ErrorCreateDelete")
+
+<form asp-action="Edit" method="post">
+	@Html.AntiForgeryToken()
+	<input asp-for="Id" type="hidden" />
+
+	<div class="mb-3 col-6">
+		<label>Marque:</label>
+		<select asp-for="MakeId" class="form-select" asp-items="ViewBag.Makes">
+			<option value="">-- Choisir --</option>
+		</select>
+		<span asp-validation-for="MakeId" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3 col-6">
+		<label>Nom:</label>
+		<input asp-for="Name" class="form-control" />
+		<span asp-validation-for="Name" class="text-danger"></span>
+	</div>
+
+	<div class="text-center">
+		<button class="btn btn-primary" type="submit">Enregistrer</button>
+		<a asp-action="Create" class="btn btn-secondary ms-2">Annuler</a>
+	</div>
+</form>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

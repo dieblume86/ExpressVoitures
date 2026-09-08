@@ -1,8 +1,6 @@
 ﻿using ExpressVoitures.Models.Entities;
-using ExpressVoitures.Models.Services;
 using ExpressVoitures.Models.Services.Interfaces;
 using ExpressVoitures.Models.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -20,6 +18,55 @@ namespace ExpressVoitures.Controllers
         {
             _carMakeService = carMakeService;
             _carModelService = carModelService;
+        }
+
+        [HttpGet]
+        public override IActionResult Edit(int id)
+        {
+            var vm = _service.GetViewModel(id);
+            if (vm == null) 
+                return NotFound();
+
+            var modelVm = _carModelService.GetViewModel(vm.ModelId);
+            var selectedMakeId = modelVm?.MakeId ?? 0;
+
+            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name).ToList();
+            ViewData["Makes"] = new SelectList(makes, "Id", "Name", selectedMakeId);
+
+            var models = _carModelService.GetViewModels()
+                .Where(m => m.MakeId == selectedMakeId)
+                .OrderBy(m => m.Name)
+                .ToList();
+            ViewData["Models"] = new SelectList(models, "Id", "Name", vm.ModelId);
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public override IActionResult Edit(CarTrimViewModel viewModel)
+        {
+            var selectedModelId = viewModel?.ModelId ?? 0;
+            var modelVm = _carModelService.GetViewModel(selectedModelId);
+            var selectedMakeId = modelVm?.MakeId ?? 0;
+
+            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name).ToList();
+            ViewData["Makes"] = new SelectList(makes, "Id", "Name", selectedMakeId);
+
+            var models = _carModelService.GetViewModels()
+                .Where(m => m.MakeId == selectedMakeId)
+                .OrderBy(m => m.Name)
+                .ToList();
+            ViewData["Models"] = new SelectList(models, "Id", "Name", selectedModelId);
+
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            _service.Update(viewModel);
+            TempData["Success"] = "Finition mise à jour.";
+            return RedirectToAction(nameof(Create));
         }
 
         // Endpoint for AJAX

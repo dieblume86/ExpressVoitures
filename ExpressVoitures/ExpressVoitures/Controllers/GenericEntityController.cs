@@ -1,5 +1,6 @@
 ﻿using ExpressVoitures.Helpers;
 using ExpressVoitures.Models.Services.Interfaces;
+using ExpressVoitures.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +39,6 @@ namespace ExpressVoitures.Controllers
 
             return View(new TViewModel());
         }
-
         [Authorize]
         [HttpPost]
         public virtual IActionResult Create(TViewModel viewModel)
@@ -64,6 +64,36 @@ namespace ExpressVoitures.Controllers
                 TempData["Error"] = "Une erreur est survenue.";
                 return RedirectToAction(nameof(Create));
             }
+        }
+
+        [Authorize]
+        [HttpGet]
+        public virtual IActionResult Edit(int id)
+        {
+            var vm = _service.GetViewModel(id);
+            
+            if (vm == null) 
+                return NotFound();
+
+            SetViewDatas();
+
+            return View(vm);
+        }
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual IActionResult Edit(TViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                SetViewDatas();
+                return View(viewModel);
+            }
+
+            _service.Update(viewModel);
+
+            TempData["Success"] = "La marque a été mise à jour.";
+            return RedirectToAction(nameof(Create));
         }
 
         [Authorize]

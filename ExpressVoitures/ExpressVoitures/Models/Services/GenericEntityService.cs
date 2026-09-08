@@ -26,8 +26,7 @@ namespace ExpressVoitures.Models.Services
         }
         public virtual List<Entity> GetAllEntities()
         {
-            List<Entity> entites = _entityRepository.GetAll().ToList();
-            return entites;
+            return _entityRepository.GetAll().ToList();
         }
 
         public virtual ViewModel GetViewModel(int id)
@@ -46,9 +45,14 @@ namespace ExpressVoitures.Models.Services
 
         public virtual void Add(ViewModel viewModel)
         {
-            var newEntity = AutoMapToEntity(viewModel);
-            _entityRepository.Add(newEntity);
+            _entityRepository.Add(AutoMapToEntity(viewModel));
         }
+
+        public virtual void Update(ViewModel viewModel)
+        {
+            _entityRepository.Update(AutoMapToEntity(viewModel));
+        }
+
         public virtual List<string> CheckModelErrors(ViewModel viewModel)
         {
             var modelErrors = new List<string>();

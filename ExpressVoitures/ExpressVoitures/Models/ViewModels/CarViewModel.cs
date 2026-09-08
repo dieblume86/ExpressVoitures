@@ -6,7 +6,6 @@ namespace ExpressVoitures.Models.ViewModels
 {
     public class CarViewModel
     {
-        [BindNever]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "MissingVinCode")]

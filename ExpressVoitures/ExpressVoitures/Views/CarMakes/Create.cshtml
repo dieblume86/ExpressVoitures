@@ -41,6 +41,8 @@
 						<input type="hidden" name="id" value="@item.Id" />
 						<button type="submit" class="btn btn-danger">"Delete"</button>
 					</form>
+
+					<a asp-action="Edit" asp-controller="CarMakes" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Éditer</a>
 				</div>
 			</div>
 		}

@@ -5,7 +5,6 @@ namespace ExpressVoitures.Models.ViewModels
 {
     public class CarMakeViewModel
     {
-        [BindNever]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "MissingName")]

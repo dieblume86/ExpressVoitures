@@ -9,6 +9,7 @@ namespace ExpressVoitures.Models.Repositories.Interfaces
         IEnumerable<T> Find(Expression<Func<T, bool>> expression);
         void Add(T entity);
         void AddRange(IEnumerable<T> entities);
+        void Update(T entity);
         void Remove(int id);
         void Remove(T entity);
         void RemoveRange(IEnumerable<T> entities);

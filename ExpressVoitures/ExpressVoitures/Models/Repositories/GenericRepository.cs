@@ -24,6 +24,12 @@ namespace ExpressVoitures.Models.Repositories
             _context.SaveChanges();
         }
 
+        public virtual void Update(T entity)
+        {
+            _context.Set<T>().Update(entity);
+            _context.SaveChanges();
+        }
+
         public virtual IEnumerable<T> Find(Expression<Func<T, bool>> expression)
         {
             return _context.Set<T>().Where(expression);

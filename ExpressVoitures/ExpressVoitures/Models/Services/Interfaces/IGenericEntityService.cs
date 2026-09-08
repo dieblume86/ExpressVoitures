@@ -12,6 +12,8 @@ namespace ExpressVoitures.Models.Services.Interfaces
         List<ViewModel> GetViewModels();
 
         void Add(ViewModel viewModel);
+        void Update(ViewModel viewModel);
+
         List<string> CheckModelErrors(ViewModel viewModel);
         List<ValidationResult> CheckProductValidationResult(ViewModel viewModel);
 
