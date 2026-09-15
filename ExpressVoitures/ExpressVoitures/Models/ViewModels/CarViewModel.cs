@@ -1,5 +1,4 @@
-﻿using ExpressVoitures.Models.Entities;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace ExpressVoitures.Models.ViewModels
@@ -17,22 +16,10 @@ namespace ExpressVoitures.Models.ViewModels
         public string? PictureId { get; set; }
         public IFormFile? PictureFile { get; set; }
 
-    
-
-        [Required(ErrorMessage = "MissingMakeId")]
-        public int MakeId { get; set; }
-
-        [Required(ErrorMessage = "MissingModelId")]
-        public int ModelId { get; set; }
-
         [Required(ErrorMessage = "MissingTrimId")]
         public int TrimId { get; set; }
 
 
-        [BindNever]
-        public CarMakeViewModel? Make { get; set; }
-        [BindNever]
-        public CarModelViewModel? Model { get; set; }
         [BindNever]
         public CarTrimViewModel? Trim { get; set; }
         [BindNever]

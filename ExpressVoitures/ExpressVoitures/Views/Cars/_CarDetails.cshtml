@@ -19,8 +19,8 @@
 			<ul class="listNoType">
 				<li><span>Prix de vente</span></li>
 				<li>@Model.Year</li>
-				<li>@Model.Make?.Name</li>
-				<li>@Model.Model?.Name</li>
+				<li>@Model.Trim.Model.Make?.Name</li>
+				<li>@Model.Trim.Model?.Name</li>
 				<li>@Model.Trim?.Name</li>
 			</ul>
 		</div>

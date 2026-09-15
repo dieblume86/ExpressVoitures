@@ -8,14 +8,9 @@
         public string? PictureId { get; set; }
 
          
-
-        public int? MakeId { get; set; }
-        public int? ModelId { get; set; }
         public int? TrimId { get; set; }
 
 
-        public CarMake? Make { get; set; }
-        public CarModel? Model { get; set; }
         public CarTrim? Trim { get; set; }
         public CarSale? Sale { get; set; }
         public ICollection<Repair> Repairs { get; set; } = new HashSet<Repair>();

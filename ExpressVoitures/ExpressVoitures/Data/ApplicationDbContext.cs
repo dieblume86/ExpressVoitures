@@ -53,16 +53,6 @@ namespace ExpressVoitures.Data
 
             modelBuilder.Entity<Car>(entity =>
             {
-                entity.HasOne(c => c.Make)
-                    .WithMany(m => m.Cars)
-                    .HasForeignKey(c => c.MakeId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(c => c.Model)
-                    .WithMany(m => m.Cars)
-                    .HasForeignKey(c => c.ModelId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
                 entity.HasOne(c => c.Trim)
                     .WithMany(t => t.Cars)
                     .HasForeignKey(c => c.TrimId)

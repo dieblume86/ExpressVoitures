@@ -155,13 +155,14 @@ namespace ExpressVoitures.Controllers
 
             foreach (var car in cars)
             {
-                makes.TryGetValue(car.MakeId, out var makeVm);
-                models.TryGetValue(car.ModelId, out var modelVm);
                 trims.TryGetValue(car.TrimId, out var trimVm);
-
-                car.Make = makeVm;
-                car.Model = modelVm;
                 car.Trim = trimVm;
+
+                models.TryGetValue(car.Trim.ModelId, out var modelVm);
+                car.Trim.Model = modelVm;
+
+                makes.TryGetValue(car.Trim.Model.MakeId, out var makeVm);
+                car.Trim.Model.Make = makeVm;
             }
 
             return cars;
@@ -174,8 +175,8 @@ namespace ExpressVoitures.Controllers
                 return new CarViewModel();
 
             vm.Trim = _carTrimService.GetViewModel(vm.TrimId);
-            vm.Model = _carModelService.GetViewModel(vm.ModelId);
-            vm.Make = _carMakeService.GetViewModel(vm.MakeId);
+            vm.Trim.Model = _carModelService.GetViewModel(vm.Trim.ModelId);
+            vm.Trim.Model.Make = _carMakeService.GetViewModel(vm.Trim.Model.MakeId);
 
             return vm;
         }
