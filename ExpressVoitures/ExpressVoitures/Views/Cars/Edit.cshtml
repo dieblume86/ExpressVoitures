@@ -1,54 +1,120 @@
-﻿@model ExpressVoitures.Models.Entities.Car
+﻿@model ExpressVoitures.Models.ViewModels.CarViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+	ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Modifier la voiture</h1>
 
-<h4>Car</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="VinCode" class="control-label"></label>
-                <input asp-for="VinCode" class="form-control" />
-                <span asp-validation-for="VinCode" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Year" class="control-label"></label>
-                <input asp-for="Year" class="form-control" />
-                <span asp-validation-for="Year" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Trim.Model.MakeId" class="control-label"></label>
-                <select asp-for="Trim.Model.MakeId" class="form-control" asp-items="ViewBag.MakeId"></select>
-                <span asp-validation-for="Trim.Model.MakeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Trim.ModelId" class="control-label"></label>
-                <select asp-for="Trim.ModelId" class="form-control" asp-items="ViewBag.ModelId"></select>
-                <span asp-validation-for="Trim.ModelId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TrimId" class="control-label"></label>
-                <select asp-for="TrimId" class="form-control" asp-items="ViewBag.TrimId"></select>
-                <span asp-validation-for="TrimId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+@await Html.PartialAsync("_ErrorCreateDelete")
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<form asp-action="Edit" method="post">
+	@Html.AntiForgeryToken()
+	<input asp-for="Id" type="hidden" />
+
+	<div class="mb-3 col-6">
+		<label>Marque:</label>
+		<select id="makeSelect" class="form-select" asp-items="ViewBag.Makes">
+			<option value="">-- Choisir --</option>
+		</select>
+	</div>
+
+	<div class="mb-3 col-6">
+		<label>Modèle:</label>
+		<select id="modelSelect" asp-for="Trim.ModelId" class="form-select" asp-items="ViewBag.Models">
+			<option value="">-- Choisir --</option>
+		</select>
+		<span asp-validation-for="Trim.ModelId" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3 col-6">
+		<label>Finition:</label>
+		<select id="trimSelect" asp-for="TrimId" class="form-select" asp-items="ViewBag.Trims">
+			<option value="">-- Choisir --</option>
+		</select>
+		<span asp-validation-for="TrimId" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3 col-6">
+		<label>VIN code:</label>
+		<input asp-for="VinCode" class="form-control" />
+		<span asp-validation-for="VinCode" class="text-danger"></span>
+	</div>
+	<div class="mb-3 col-6">
+		<label>Année :</label>
+		<input asp-for="Year" class="form-control" />
+		<span asp-validation-for="Year" class="text-danger"></span>
+	</div>
+	<div class="mb-3 col-6">
+		<label>Photo (jpg/png, max 5MB) :</label>
+		<input asp-for="PictureFile" type="file" class="form-control" accept=".jpg,.jpeg,.png,.gif" />
+		<span asp-validation-for="PictureFile" class="text-danger"></span>
+	</div>
+
+	<div class="text-center">
+		<button class="btn btn-primary" type="submit">Enregistrer</button>
+		<a asp-action="Create" class="btn btn-secondary ms-2">Annuler</a>
+	</div>
+</form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			var makeSelect = document.getElementById('makeSelect');
+			var modelSelect = document.getElementById('modelSelect');
+			var trimSelect = document.getElementById('trimSelect');
+
+			function clearModels() {
+				modelSelect.innerHTML = '<option value="">-- Choisir --</option>';
+			}
+			function clearTrims() {
+				trimSelect.innerHTML = '<option value="">-- Choisir --</option>';
+			}
+
+			makeSelect?.addEventListener('change', function () {
+				var makeId = this.value;
+				clearModels();
+				clearTrims();
+
+				if (!makeId) 
+					return;
+
+				fetch('@Url.Action("GetModelsByMake", "CarModels")?makeId=' + encodeURIComponent(makeId))
+					.then(function (res) { return res.json(); })
+					.then(function (data) {
+						data.forEach(function (m) {
+							var opt = document.createElement('option');
+							opt.value = m.id;
+							opt.text = m.name;
+							modelSelect.appendChild(opt);
+						});
+					})
+					.catch(function (err) { console.error(err); });
+			});
+
+			modelSelect?.addEventListener('change', function () {
+				var modelId = this.value;
+				clearTrims();
+
+				if (!modelId)
+					return;
+
+				fetch('@Url.Action("GetTrimsByModel", "CarTrims")?modelId=' + encodeURIComponent(modelId))
+					.then(function (res) { return res.json(); })
+					.then(function (data) {
+						data.forEach(function (m) {
+							var opt = document.createElement('option');
+							opt.value = m.id;
+							opt.text = m.name;
+							trimSelect.appendChild(opt);
+						});
+					})
+					.catch(function (err) { console.error(err); });
+			});
+		});
+	</script>
 }

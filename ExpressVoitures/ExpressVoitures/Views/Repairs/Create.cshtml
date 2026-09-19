@@ -1,42 +1,86 @@
-﻿@model ExpressVoitures.Models.Entities.Repair
+﻿@using ExpressVoitures.Helpers
+@model ExpressVoitures.Models.ViewModels.RepairViewModel
 
 @{
-    ViewData["Title"] = "Create";
+	ViewData["Title"] = "Create";
 }
 
 <h1>Create</h1>
 
 <h4>Repair</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RepairCost" class="control-label"></label>
-                <input asp-for="RepairCost" class="form-control" />
-                <span asp-validation-for="RepairCost" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CarId" class="control-label"></label>
-                <select asp-for="CarId" class ="form-control" asp-items="ViewBag.CarId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@await Html.PartialAsync("_ErrorCreateDelete")
 
+<form asp-action="Create" method="post">
+	<div class="mb-3 col-6">
+		<label>Marque:</label>
+		<select asp-for="CarId" class="form-select" asp-items="ViewBag.Cars">
+			<option value="">-- Choisir --</option>
+		</select>
+		<span asp-validation-for="CarId" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3 col-6">
+		<label>Description:</label>
+		<input asp-for="Description" class="form-control" />
+		<span asp-validation-for="Description" class="text-danger"></span>
+	</div>
+	<div class="mb-3 col-6">
+		<label>Coût de réparation:</label>
+		<input asp-for="RepairCost" class="form-control" />
+		<span asp-validation-for="RepairCost" class="text-danger"></span>
+	</div>
+	<div class="text-center">
+		<input class="btn btn-primary" type="submit" value="OK" />
+	</div>
+</form>
+
+@* @{
+	var items = ViewData[ViewDataKeys.ExistingItems] as IEnumerable<ExpressVoitures.Models.ViewModels.CarModelViewModel>;
+
+	<h4>Modèles existants</h4>
+
+	if (items != null && items.Any())
+	{
+		<div class="row">
+			<div class="col-4">
+				<span>Marque</span>
+			</div>
+			<div class="col-4">
+				<span>Modèle</span>
+			</div>
+			<div class="col-4">
+				<span>Supprimer</span>
+			</div>
+		</div>
+		@foreach (var item in items)
+		{
+			<div class="row border-top py-2">
+				<div class="col-4">
+					@{
+						var makeName = item.Make?.Name ?? "(Marque inconnue)";
+					}
+					<span>@makeName</span>
+				</div>
+				<div class="col-4">
+					<span>@item.Name</span>
+				</div>
+				<div class="col-4">
+					<form id="@item.Id" asp-action="Delete" asp-controller="CarModels" method="post">
+						<input type="hidden" name="id" value="@item.Id" />
+						<button type="submit" class="btn btn-danger">Delete</button>
+
+						<a asp-action="Edit" asp-controller="CarModels" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Éditer</a>
+					</form>
+				</div>
+			</div>
+		}
+	}
+}
+ *@
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 }

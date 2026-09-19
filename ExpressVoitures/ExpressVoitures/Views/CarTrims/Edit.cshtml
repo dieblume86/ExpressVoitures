@@ -4,7 +4,7 @@
 	ViewData["Title"] = "Edit";
 }
 
-<h1>Modifier le modèle</h1>
+<h1>Modifier la finitione</h1>
 
 @await Html.PartialAsync("_ErrorCreateDelete")
 
@@ -56,7 +56,8 @@
 			makeSelect?.addEventListener('change', function () {
 				var makeId = this.value;
 				clearModels();
-				if (!makeId) return;
+				if (!makeId) 
+					return;
 
 				fetch('@Url.Action("GetModelsByMake", "CarModels")?makeId=' + encodeURIComponent(makeId))
 					.then(function (res) { return res.json(); })
