@@ -3,7 +3,10 @@
 
 @{
 	ViewData["Title"] = "Create";
+	var placeholder = Url.Content("~/images/carImagePlaceHolder.JPG");
+	var pictureUrl = string.IsNullOrEmpty(Model?.PictureId) ? placeholder : Url.Action("GetPicture", "Cars", new { pictureId = Model.PictureId });
 }
+
 <div><p>Créer une nouvelle voiture</p></div>
 
 @await Html.PartialAsync("_ErrorCreateDelete")
@@ -57,8 +60,11 @@
 		<span asp-validation-for="Year" class="text-danger"></span>
 	</div>
 	<div class="mb-3 col-6">
+		<div class="mb-2">
+			<img id="picturePreview" src="@pictureUrl" alt="Aperçu photo" class="img-thumbnail" style="max-width:260px; max-height:160px;" />
+		</div>
 		<label>Photo (jpg/png, max 5MB) :</label>
-		<input asp-for="PictureFile" type="file" class="form-control" accept=".jpg,.jpeg,.png,.gif" />
+		<input asp-for="PictureFile" id="pictureFileInput" type="file" class="form-control" accept=".jpg,.jpeg,.png,.gif" />
 		<span asp-validation-for="PictureFile" class="text-danger"></span>
 	</div>
 
@@ -188,6 +194,23 @@
 						});
 					})
 					.catch(function (err) { console.error(err); });
+			});
+
+						// Preview file input
+			var fileInput = document.getElementById('pictureFileInput');
+			var preview = document.getElementById('picturePreview');
+
+			fileInput?.addEventListener('change', function (e) {
+				var file = this.files && this.files[0];
+				if (!file) {
+					// restore existing picture or placeholder (server-side set)
+					return;
+				}
+				var reader = new FileReader();
+				reader.onload = function (ev) {
+					preview.src = ev.target.result;
+				};
+				reader.readAsDataURL(file);
 			});
 		});
 	</script>

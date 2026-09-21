@@ -4,7 +4,7 @@
 
 @{
     var placeholder = Url.Content("~/images/carImagePlaceHolder.JPG");
-    var pictureUrl = Url.Action("GetPicture", "Cars", new { id = Model.Id });
+    var pictureUrl = Url.Action("GetPicture", "Cars", new { pictureId = Model.PictureId });
 }
 
 <a asp-controller="Cars" asp-action="Details" asp-route-id="@Model.Id" class="text-decoration-none text-dark">

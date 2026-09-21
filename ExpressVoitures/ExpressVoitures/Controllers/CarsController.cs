@@ -41,13 +41,12 @@ namespace ExpressVoitures.Controllers
             return View("_CarDetails", GetCar(id));
         }
         [HttpGet]
-        public IActionResult GetPicture(int id)
+        public IActionResult GetPicture(string pictureId)
         {
-            var vm = _service.GetViewModel(id);
-            if (vm == null || string.IsNullOrEmpty(vm.PictureId))
+            if (string.IsNullOrEmpty(pictureId))
                 return NotFound();
 
-            var path = Path.Combine(pictureFolderPath, vm.PictureId);
+            var path = Path.Combine(pictureFolderPath, pictureId);
             if (!System.IO.File.Exists(path))
                 return NotFound();
 
