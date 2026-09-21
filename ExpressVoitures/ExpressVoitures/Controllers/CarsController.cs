@@ -38,7 +38,7 @@ namespace ExpressVoitures.Controllers
         [HttpGet]
         public IActionResult Details(int id)
         {
-            return View("Details", GetCar(id));
+            return View("_CarDetails", GetCar(id));
         }
         [HttpGet]
         public IActionResult GetPicture(int id)
