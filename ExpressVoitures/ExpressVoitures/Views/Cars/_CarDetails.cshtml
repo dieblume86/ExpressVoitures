@@ -3,8 +3,8 @@
 <link rel="stylesheet" href="~/css/carItem.css" asp-append-version="true" />
 
 @{
-    var placeholder = Url.Content("~/images/carImagePlaceHolder.JPG");
-    var pictureUrl = Url.Action("GetPicture", "Cars", new { pictureId = Model.PictureId });
+	var placeholder = Url.Content("~/images/carImagePlaceHolder.JPG");
+	var pictureUrl = Url.Action("GetPicture", "Cars", new { pictureId = Model.PictureId });
 }
 
 <a asp-controller="Cars" asp-action="Details" asp-route-id="@Model.Id" class="text-decoration-none text-dark">
@@ -25,4 +25,9 @@
 			</ul>
 		</div>
 	</div>
+
+	@if (User?.Identity?.IsAuthenticated == true)
+	{
+		<a asp-action="Edit" asp-controller="Cars" asp-route-id="@Model.Id" class="btn btn-sm btn-secondary">Éditer</a>
+	}
 </a>

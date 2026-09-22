@@ -5,6 +5,7 @@ using ExpressVoitures.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.IO;
 
 namespace ExpressVoitures.Controllers
@@ -120,7 +121,7 @@ namespace ExpressVoitures.Controllers
                 _service.Add(viewModel);
 
                 TempData["Success"] = "Success.";
-                return RedirectToAction(nameof(Details), viewModel);
+                return RedirectToAction(nameof(Details), viewModel.Id);
             }
             else
             {
@@ -129,6 +130,40 @@ namespace ExpressVoitures.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public override IActionResult Delete(int id)
+        {
+            try
+            {
+                var pictureId = _service.GetViewModel(id)?.PictureId;
+
+                _service.Delete(id);
+
+                if (!string.IsNullOrEmpty(pictureId))
+                {
+                    var fullPath = Path.Combine(pictureFolderPath, pictureId);
+                    if (System.IO.File.Exists(fullPath))
+                    {
+                        System.IO.File.Delete(fullPath);
+                    }
+                }
+
+                TempData["Success"] = "La marque a été supprimée.";
+            }
+            catch (DbUpdateException)
+            {
+                // Erreur typique : contrainte FK (des modèles/voitures liées)
+                TempData["Error"] = "Impossible de supprimer cette marque : des enregistrements liés existent.";
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Une erreur est survenue lors de la suppression.";
+            }
+
+            return RedirectToAction(nameof(Create));
+        }
 
         [HttpGet]
         public override IActionResult Edit(int id)
@@ -161,37 +196,99 @@ namespace ExpressVoitures.Controllers
             return View(vm);
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public override IActionResult Edit(CarViewModel vm)
+        public override IActionResult Edit(CarViewModel viewModel)
         {
-            var selectedMakeId = vm.Trim?.Model?.MakeId ?? 0;
-            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name).ToList();
-            ViewData[ViewDataKeys.Makes] = new SelectList(makes, "Id", "Name", selectedMakeId);
-
-            var selectedModelId = vm.Trim?.ModelId ?? 0;
-            var models = _carModelService.GetViewModels()
-                .Where(m => m.MakeId == selectedMakeId)
-                .OrderBy(m => m.Name)
-                .ToList();
-            ViewData[ViewDataKeys.Models] = new SelectList(models, "Id", "Name", vm.Trim.ModelId);
-
-            var selectedTrimId = vm.Trim?.Model?.MakeId ?? 0;
-            var trims = _carTrimService.GetViewModels()
-                .Where(m => m.ModelId == vm.Trim.ModelId)
-                .OrderBy(m => m.Name)
-                .ToList();
-            ViewData[ViewDataKeys.Trims] = new SelectList(trims, "Id", "Name", vm.TrimId);
-
-            if (!ModelState.IsValid)
+            if (viewModel.PictureFile != null && viewModel.PictureFile.Length > 0)
             {
-                return View(vm);
+                var allowed = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                var ext = Path.GetExtension(viewModel.PictureFile.FileName)?.ToLowerInvariant();
+                if (string.IsNullOrEmpty(ext) || !allowed.Contains(ext))
+                {
+                    ModelState.AddModelError("PhotoFile", "Type de fichier non autorisé. Utilisez jpg/png/gif.");
+                }
+                else if (viewModel.PictureFile.Length > 5 * 1024 * 1024)
+                {
+                    ModelState.AddModelError("PhotoFile", "Fichier trop volumineux (max 5MB).");
+                }
+                else
+                {
+                    try
+                    {
+                        var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+                        if (!Directory.Exists(pictureFolderPath))
+                            Directory.CreateDirectory(pictureFolderPath);
+
+                        var fileName = string.IsNullOrEmpty(viewModel.PictureId)? $"{Guid.NewGuid()}{ext}" : viewModel.PictureId;
+                        var fullPath = Path.Combine(pictureFolderPath, fileName);
+                        using (var stream = new FileStream(fullPath, FileMode.Create))
+                        {
+                            viewModel.PictureFile.CopyTo(stream);
+                        }
+
+                        viewModel.PictureId = fileName;
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("PhotoFile", "Impossible d'enregistrer l'image : " + ex.Message);
+                    }
+                }
             }
 
-            _service.Update(vm);
-            TempData["Success"] = "Finition mise à jour.";
-            return RedirectToAction(nameof(Create));
+            IEnumerable<string> modelErrors = _service.CheckModelErrors(viewModel);
+
+            foreach (string error in modelErrors)
+            {
+                ModelState.AddModelError("", error);
+            }
+
+            if (ModelState.IsValid)
+            {
+                _service.Update(viewModel);
+
+                TempData["Success"] = "Voiture mise à jour.";
+                return RedirectToAction(nameof(Details), new { id = viewModel.Id });
+            }
+            else
+            {
+                TempData["Error"] = "Une erreur est survenue.";
+                return RedirectToAction(nameof(Edit), new { id = viewModel.Id });
+            }
         }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public override IActionResult Edit(CarViewModel vm)
+        //{
+        //    var selectedMakeId = vm.Trim?.Model?.MakeId ?? 0;
+        //    var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name).ToList();
+        //    ViewData[ViewDataKeys.Makes] = new SelectList(makes, "Id", "Name", selectedMakeId);
+
+        //    var selectedModelId = vm.Trim?.ModelId ?? 0;
+        //    var models = _carModelService.GetViewModels()
+        //        .Where(m => m.MakeId == selectedMakeId)
+        //        .OrderBy(m => m.Name)
+        //        .ToList();
+        //    ViewData[ViewDataKeys.Models] = new SelectList(models, "Id", "Name", vm.Trim.ModelId);
+
+        //    var selectedTrimId = vm.Trim?.Model?.MakeId ?? 0;
+        //    var trims = _carTrimService.GetViewModels()
+        //        .Where(m => m.ModelId == vm.Trim.ModelId)
+        //        .OrderBy(m => m.Name)
+        //        .ToList();
+        //    ViewData[ViewDataKeys.Trims] = new SelectList(trims, "Id", "Name", vm.TrimId);
+
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(vm);
+        //    }
+
+        //    _service.Update(vm);
+        //    TempData["Success"] = "Finition mise à jour.";
+        //    return RedirectToAction(nameof(Create));
+        //}
 
 
         protected override void SetViewDatas()

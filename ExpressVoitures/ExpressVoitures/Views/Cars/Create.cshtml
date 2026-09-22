@@ -81,10 +81,10 @@
 	if (items != null && items.Any())
 	{
 		<div class="row">
-			<div class="col-2">
+			<div class="col-1">
 				<span>VIN code</span>
 			</div>
-			<div class="col-2">
+			<div class="col-1">
 				<span>Année</span>
 			</div>
 			<div class="col-2">
@@ -97,16 +97,21 @@
 				<span>Finition</span>
 			</div>
 			<div class="col-2">
+				<span>Picture</span>
+			</div>
+			<div class="col-2">
 				<span>Supprimer</span>
 			</div>
 		</div>
 		@foreach (var item in items)
 		{
+			var itemPictureUrl = string.IsNullOrEmpty(item?.PictureId) ? placeholder : Url.Action("GetPicture", "Cars", new { pictureId = item.PictureId });
+
 			<div class="row border-top py-2">
-				<div class="col-2">
+				<div class="col-1">
 					<span>@item.VinCode</span>
 				</div>
-				<div class="col-2">
+				<div class="col-1">
 					<span>@item.Year</span>
 				</div>
 				<div class="col-2">
@@ -126,6 +131,9 @@
 						var trimName = item.Trim?.Name ?? "(Finition inconnue)";
 					}
 					<span>@trimName</span>
+				</div>
+				<div class="col-2">
+					<img id="picturePreview" src="@itemPictureUrl" alt="Aperçu photo" class="img-thumbnail" style="max-width:260px; max-height:160px;" />
 				</div>
 				<div class="col-2">
 					<form id="@item.Id" asp-action="Delete" asp-controller="Cars" method="post">
