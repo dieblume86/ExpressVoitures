@@ -35,6 +35,49 @@ namespace ExpressVoitures.Controllers
             return RedirectToAction("Edit", "Cars", new { id = model.CarId });
         }
 
+        //[HttpGet]
+        //[Authorize]
+        //public override IActionResult Edit(int id)
+        //{
+        //    try
+        //    {
+        //        var vm = _service.GetViewModel(id);
+        //        if (vm == null)
+        //        {
+        //            // Log possible here (ILogger) — pour l'instant on renvoie NotFound clair
+        //            TempData["Error"] = $"Réparation introuvable (id={id}).";
+        //            return RedirectToAction("Edit", "Cars"); // redirige vers liste/écran voitures si nécessaire
+        //        }
+
+        //        // si besoin remplir ViewData spécifiques (ex. SelectLists) : SetViewDatas();
+        //        return View(vm);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Pour debug rapide : stocker message et stack dans TempData (supprimer en prod)
+        //        TempData["Error"] = "Erreur lors du chargement de la réparation : " + ex.Message;
+        //        TempData["ErrorDetail"] = ex.ToString();
+        //        return RedirectToAction("Edit", "Cars");
+        //    }
+        //}
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public override IActionResult Edit(RepairViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                SetViewDatas();
+                return View(viewModel);
+            }
+
+            _service.Update(viewModel);
+
+            TempData["Success"] = "La réparation a été mise à jour.";
+            return RedirectToAction("Edit", "Cars", new { id = viewModel.CarId });
+        }
+
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]

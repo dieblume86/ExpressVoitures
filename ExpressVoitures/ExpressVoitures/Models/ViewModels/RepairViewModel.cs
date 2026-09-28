@@ -5,16 +5,15 @@ namespace ExpressVoitures.Models.ViewModels
 {
     public class RepairViewModel
     {
-        [BindNever]
         public int Id { get; set; }
 
-        [Required(ErrorMessageResourceName = "MissingDescription")]
+        [Required(ErrorMessage = "MissingDescription")]
         public string Description { get; set; }
 
-        [Required(ErrorMessageResourceName = "MissingRepairCost")]
+        [Required(ErrorMessage = "MissingRepairCost")]
         public float RepairCost { get; set; }
 
-        [Required(ErrorMessageResourceName = "MissingCarId")]
+        [Required(ErrorMessage = "MissingCarId")]
         public int CarId { get; set; }
 
 

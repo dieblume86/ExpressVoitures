@@ -1,0 +1,40 @@
+@model ExpressVoitures.Models.ViewModels.RepairViewModel
+
+@{
+	ViewData["Title"] = "Edit";
+}
+
+<h1>Modifier la réparation</h1>
+
+@await Html.PartialAsync("_ErrorCreateDelete")
+
+<form asp-action="Edit" method="post">
+	@Html.AntiForgeryToken()
+	<input asp-for="Id" type="hidden" />
+	<input asp-for="CarId" type="hidden" />
+
+	<div class="row">
+		<div class="mb-3 col-6">
+			<label asp-for="Description" class="form-label">Nom :</label>
+			<input asp-for="Description" class="form-control" />
+			<span asp-validation-for="Description" class="text-danger"></span>
+		</div>
+
+		<div class="mb-3 col-6">
+			<label asp-for="RepairCost" class="form-label">Coût (€) :</label>
+			<input asp-for="RepairCost" class="form-control" type="number" step="0.01" />
+			<span asp-validation-for="RepairCost" class="text-danger"></span>
+		</div>
+	</div>
+
+	<div class="text-center">
+		<button class="btn btn-primary" type="submit">Enregistrer</button>
+		<a asp-action="Edit" asp-controller="Cars" asp-route-id="@Model.CarId" class="btn btn-secondary ms-2">Annuler</a>
+	</div>
+</form> 
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

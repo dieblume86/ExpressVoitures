@@ -92,7 +92,7 @@ namespace ExpressVoitures.Controllers
 
             _service.Update(viewModel);
 
-            TempData["Success"] = "La marque a été mise à jour.";
+            TempData["Success"] = "Mise à jour.";
             return RedirectToAction(nameof(Create));
         }
 
