@@ -1,33 +1,75 @@
-﻿using ExpressVoitures.Models.Services.Interfaces;
+﻿using ExpressVoitures.Models.Entities;
+using ExpressVoitures.Models.Services.Interfaces;
 using ExpressVoitures.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpressVoitures.Controllers
 {
-    public class RepairsController : Controller
+    public class RepairsController : GenericEntityController<Repair, RepairViewModel, IRepairService>
     {
-        private readonly IRepairService _repairService;
-
-        public RepairsController(IRepairService repairService)
+        public RepairsController(IRepairService service) : base(service)
         {
-            _repairService = repairService;
         }
 
         [Authorize]
         [HttpPost]
-        public IActionResult Create(RepairViewModel model)
+        [ValidateAntiForgeryToken]
+        public override IActionResult Create(RepairViewModel model)
         {
-            _repairService.Add(model);
-            return View();
+            if (model == null)
+            {
+                TempData["Error"] = "Données de réparation manquantes.";
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Informations invalides pour la réparation.";
+                return RedirectToAction("Edit", "Cars", new { id = model.CarId });
+            }
+
+            _service.Add(model);
+            TempData["Success"] = "Réparation ajoutée.";
+            return RedirectToAction("Edit", "Cars", new { id = model.CarId });
         }
 
         [Authorize]
         [HttpPost]
-        public IActionResult Delete(int id)
+        [ValidateAntiForgeryToken]
+        public override IActionResult Delete(int id)
         {
-            _repairService.Delete(id);
-            return View();
+            // Récupère l'id de la voiture avant suppression pour pouvoir rediriger correctement
+            var carId = 0;
+            try
+            {
+                var vm = _service.GetViewModel(id);
+                if (vm != null)
+                {
+                    carId = vm.CarId;
+                }
+
+                _service.Delete(id);
+                TempData["Success"] = "La réparation a été supprimée.";
+            }
+            catch (DbUpdateException)
+            {
+                // Erreur typique : contrainte FK (des modèles/voitures liées)
+                TempData["Error"] = "Impossible de supprimer cette réparation : des enregistrements liés existent.";
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Une erreur est survenue lors de la suppression.";
+            }
+
+            // Si carId vaut 0, on redirige vers la page Create des voitures (comportement existant précédemment)
+            if (carId > 0)
+            {
+                return RedirectToAction("Edit", "Cars", new { id = carId });
+            }
+
+            return RedirectToAction(nameof(Create));
         }
     }
 }

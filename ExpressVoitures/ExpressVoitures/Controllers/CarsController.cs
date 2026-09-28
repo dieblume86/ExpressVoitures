@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
 
 namespace ExpressVoitures.Controllers
 {
@@ -21,14 +20,16 @@ namespace ExpressVoitures.Controllers
         private readonly ICarTrimService _carTrimService;
         private const string unknownTrim = "Finition inconnue";
 
-        private readonly string pictureFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "ExpressVoitures");
-        //C:\Users\Megaport\AppData\LocalLow\ExpressVoitures\185d3bed-0b25-4995-8ce8-68454bf50882.png
+        private readonly IRepairService _repairService;
 
-        public CarsController(ICarService carService, ICarMakeService carMakeService, ICarModelService carModelService, ICarTrimService carTrimService) : base(carService)
+        private readonly string pictureFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "ExpressVoitures");
+
+        public CarsController(ICarService carService, ICarMakeService carMakeService, ICarModelService carModelService, ICarTrimService carTrimService, IRepairService repairService) : base(carService)
         {
             _carMakeService = carMakeService;
             _carModelService = carModelService;
             _carTrimService = carTrimService;
+            _repairService = repairService;
         }
 
         public override IActionResult Index()
@@ -192,6 +193,12 @@ namespace ExpressVoitures.Controllers
                 .OrderBy(m => m.Name)
                 .ToList();
             ViewData[ViewDataKeys.Trims] = new SelectList(trims, "Id", "Name", vm.TrimId);
+            
+            var repairs = _repairService.GetViewModels()
+                .Where(r => r.CarId == vm.Id)
+                .OrderBy(r => r.Description)
+                .ToList();
+            ViewData[ViewDataKeys.Repairs] = repairs;
 
             return View(vm);
         }

@@ -1,4 +1,5 @@
-﻿@model ExpressVoitures.Models.ViewModels.CarViewModel
+﻿@using ExpressVoitures.Helpers
+@model ExpressVoitures.Models.ViewModels.CarViewModel
 
 @{
 	ViewData["Title"] = "Edit";
@@ -63,6 +64,64 @@
 		<a asp-action="Create" class="btn btn-secondary ms-2">Annuler</a>
 	</div>
 </form>
+
+@{
+	<h4>Réparations</h4>
+
+	<form asp-action="Create" asp-controller="Repairs" method="post">
+		@Html.AntiForgeryToken()
+		<input type="hidden" name="CarId" value="@Model.Id" />
+		<div class="mb-3 col-6">
+			<label>Nom:</label>
+			<input name="Description" class="form-control" />
+			<span class="text-danger" data-valmsg-for="Description" data-valmsg-replace="true"></span>
+		</div>
+		<div class="mb-3 col-6">
+			<label>Coût (€) :</label>
+			<input name="RepairCost" type="number" step="0.01" class="form-control" value="0" />
+			<span class="text-danger" data-valmsg-for="RepairCost" data-valmsg-replace="true"></span>
+		</div>
+		<div class="text-center">
+			<input class="btn btn-primary" type="submit" value="OK" />
+		</div>
+	</form>
+
+	var items = ViewData[ViewDataKeys.Repairs] as IEnumerable<ExpressVoitures.Models.ViewModels.RepairViewModel>;
+
+	if (items != null && items.Any())
+	{
+		<div class="row">
+			<div class="col-5"><strong>Description</strong></div>
+			<div class="col-5"><strong>Coût</strong></div>
+			<div class="col-2 text-end"><strong>Actions</strong></div>
+		</div>
+
+		@foreach (var item in items)
+		{
+			<div class="row border-top py-2 align-items-center">
+				<div class="col-5">
+					@item.Description
+				</div>
+				<div class="col-5">
+					@item.RepairCost.ToString("0.00") €
+				</div>
+				<div class="col-2 text-end">
+					<form id="deleteRepair_@item.Id" asp-action="Delete" asp-controller="Repairs" method="post" class="d-inline" onsubmit="return confirm('Confirmer la suppression ?');">
+						@Html.AntiForgeryToken()
+						<input type="hidden" name="Id" value="@item.Id" />
+						<input type="hidden" name="CarId" value="@item.CarId" />
+						<button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+					</form>
+					<a asp-action="Edit" asp-controller="Repairs" asp-route-id="@item.Id" class="btn btn-sm btn-secondary ms-1">Éditer</a>
+				</div>
+			</div>
+		}
+		// @foreach (var item in items)
+		// {
+		// 	@await Html.PartialAsync("_RepairDetails", item)
+		// }
+	}
+}
 
 @section Scripts {
 	@{
