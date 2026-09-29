@@ -39,20 +39,6 @@
 				<small class="form-text text-muted date-display">@((Model?.AvailableForSaleDate.HasValue == true && Model.AvailableForSaleDate.Value.Year >= 1990) ? FormatDisplay(Model.AvailableForSaleDate.Value) : "")</small>
 				<span asp-validation-for="AvailableForSaleDate" class="text-danger"></span>
 			</div>
-
-			<div class="form-group mb-3">
-				<label asp-for="SalePrice" class="control-label"></label>
-				<input asp-for="SalePrice" class="form-control" type="number" step="0.01" />
-				<span asp-validation-for="SalePrice" class="text-danger"></span>
-			</div>
-
-			<div class="form-group mb-3">
-				<label asp-for="SaleDate" class="control-label"></label>
-				<input asp-for="SaleDate" class="form-control" type="date" min="@minDate" value="@(Model?.SaleDate.HasValue == true ? FormatIso(Model.SaleDate.Value) : string.Empty)" />
-				<small class="form-text text-muted date-display">@((Model?.SaleDate.HasValue == true && Model.SaleDate.Value.Year >= 1990) ? FormatDisplay(Model.SaleDate.Value) : "")</small>
-				<span asp-validation-for="SaleDate" class="text-danger"></span>
-			</div>
-
 			<div class="form-group">
 				<input type="submit" value="Create" class="btn btn-primary" />
 			</div>

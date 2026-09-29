@@ -9,8 +9,11 @@ namespace ExpressVoitures.Controllers
 {
     public class RepairsController : GenericEntityController<Repair, RepairViewModel, IRepairService>
     {
-        public RepairsController(IRepairService service) : base(service)
+        private readonly ICarSaleService _carSaleService;
+
+        public RepairsController(IRepairService service, ICarSaleService carSaleService) : base(service)
         {
+            _carSaleService = carSaleService;
         }
 
         [Authorize]
@@ -29,6 +32,13 @@ namespace ExpressVoitures.Controllers
                 TempData["Error"] = "Informations invalides pour la réparation.";
                 return RedirectToAction("Edit", "Cars", new { id = model.CarId });
             }
+
+            //var carSale = _carSaleService.GetViewModel(model.CarId);
+
+            //if(carSale != null)
+            //{
+
+            //}
 
             _service.Add(model);
             TempData["Success"] = "Réparation ajoutée.";
@@ -86,7 +96,7 @@ namespace ExpressVoitures.Controllers
                 return RedirectToAction("Edit", "Cars", new { id = carId });
             }
 
-            return RedirectToAction(nameof(Create));
+            return RedirectToAction("Index", "Cars");
         }
     }
 }

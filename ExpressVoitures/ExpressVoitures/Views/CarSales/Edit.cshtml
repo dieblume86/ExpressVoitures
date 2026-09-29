@@ -1,59 +1,90 @@
-﻿@model ExpressVoitures.Models.Entities.CarSale
+﻿@using ExpressVoitures.Helpers
+@model ExpressVoitures.Models.ViewModels.CarSaleViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+	ViewData["Title"] = "Create";
+	var minDate = "1990-01-01";
+	string FormatIso(DateTimeOffset d) => d.ToString("yyyy-MM-dd");
+	string FormatDisplay(DateTimeOffset d) => d.ToString("dd'/'MM'/'yyyy");
 }
 
-<h1>Edit</h1>
+<div><p>Créer une nouvelle fiche de vente</p></div>
 
-<h4>CarSale</h4>
+@await Html.PartialAsync("_ErrorCreateDelete")
+
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="PurchaseDate" class="control-label"></label>
-                <input asp-for="PurchaseDate" class="form-control" />
-                <span asp-validation-for="PurchaseDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PurchasePrice" class="control-label"></label>
-                <input asp-for="PurchasePrice" class="form-control" />
-                <span asp-validation-for="PurchasePrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AvailableForSaleDate" class="control-label"></label>
-                <input asp-for="AvailableForSaleDate" class="form-control" />
-                <span asp-validation-for="AvailableForSaleDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SalePrice" class="control-label"></label>
-                <input asp-for="SalePrice" class="form-control" />
-                <span asp-validation-for="SalePrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SaleDate" class="control-label"></label>
-                <input asp-for="SaleDate" class="form-control" />
-                <span asp-validation-for="SaleDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CarId" class="control-label"></label>
-                <select asp-for="CarId" class="form-control" asp-items="ViewBag.CarId"></select>
-                <span asp-validation-for="CarId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+	<div class="col-md-6">
+		<form asp-action="Edit" method="post">
+			@Html.AntiForgeryToken()
+			<input asp-for="CarId" type="hidden" />
+			<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+			<div class="form-group mb-3">
+				<label asp-for="PurchaseDate" class="control-label"></label>
+				<input asp-for="PurchaseDate" class="form-control" type="date" min="@minDate" value="@(Model != null && Model.PurchaseDate.Year >= 1990 ? FormatIso(Model.PurchaseDate) : string.Empty)" />
+				<small class="form-text text-muted date-display">@((Model != null && Model.PurchaseDate.Year >= 1990) ? FormatDisplay(Model.PurchaseDate) : "")</small>
+				<span asp-validation-for="PurchaseDate" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="PurchasePrice" class="control-label"></label>
+				<input asp-for="PurchasePrice" class="form-control" type="number" step="0.01" />
+				<span asp-validation-for="PurchasePrice" class="text-danger"></span>
+			</div>
+
+			<div class="form-group mb-3">
+				<label asp-for="AvailableForSaleDate" class="control-label"></label>
+				<input asp-for="AvailableForSaleDate" class="form-control" type="date" min="@minDate" value="@(Model?.AvailableForSaleDate.HasValue == true ? FormatIso(Model.AvailableForSaleDate.Value) : string.Empty)" />
+				<small class="form-text text-muted date-display">@((Model?.AvailableForSaleDate.HasValue == true && Model.AvailableForSaleDate.Value.Year >= 1990) ? FormatDisplay(Model.AvailableForSaleDate.Value) : "")</small>
+				<span asp-validation-for="AvailableForSaleDate" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Edit" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+	<a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	<script>
+		(function () {
+			function isoToDisplay(iso) {
+				if (!iso) return "";
+				const datePart = iso.split('T')[0];
+				const p = datePart.split('-');
+				if (p.length !== 3) return "";
+				return p[2] + '/' + p[1] + '/' + p[0];
+			}
+
+			const minIso = "1990-01-01";
+
+			document.querySelectorAll('input[type="date"]').forEach(function (inp) {
+				inp.placeholder = "jj/mm/aaaa";
+				const display = inp.parentElement.querySelector('.date-display');
+				if (display) display.textContent = isoToDisplay(inp.value);
+
+				inp.addEventListener('change', function () {
+					if (!this.value) {
+						if (display) display.textContent = "";
+						return;
+					}
+					if (this.value < minIso) {
+						alert("La date ne peut pas être antérieure à 1990.");
+						this.value = "";
+						if (display) display.textContent = "";
+						return;
+					}
+					if (display) display.textContent = isoToDisplay(this.value);
+				});
+			});
+		})();
+	</script>
 }

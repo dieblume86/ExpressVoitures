@@ -5,6 +5,7 @@
 	ViewData["Title"] = "Edit";
 	var placeholder = Url.Content("~/images/carImagePlaceHolder.JPG");
 	var pictureUrl = string.IsNullOrEmpty(Model?.PictureId) ? placeholder : Url.Action("GetPicture", "Cars", new { pictureId = Model.PictureId });
+	string FormatDisplay(DateTimeOffset? d) => d.HasValue ? d.Value.ToString("dd'/'MM'/'yyyy") : string.Empty;
 }
 
 <h1>Modifier la voiture</h1>
@@ -90,15 +91,23 @@
 					<th>
 						<label>SaleDate</label>
 					</th>
+					<th>
+						<label>Actions</label>
+					</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td>@sale.PurchaseDate</td>
-					<td>@sale.AvailableForSaleDate</td>
+					<td>@FormatDisplay(sale.PurchaseDate)</td>
+					<td>@FormatDisplay(sale?.AvailableForSaleDate)</td>
 					<td style="text-align:center">@sale.PurchasePrice</td>
 					<td style="text-align:center">@sale.SalePrice</td>
-					<td>@sale.SaleDate</td>
+					<td>@FormatDisplay(sale?.SaleDate)</td>
+					<td>
+						<a asp-action="Delete" asp-controller="CarSales" asp-route-id="@sale.Id" class="btn btn-sm btn-secondary ms-1">Supprimer</a>
+
+						<a asp-action="Edit" asp-controller="CarSales" asp-route-id="@sale.Id" class="btn btn-sm btn-secondary ms-1">Éditer</a>
+					</td>
 				</tr>
 			</tbody>
 		</table>

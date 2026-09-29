@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ExpressVoitures.Controllers
 {
-    public class CarSalesController : GenericEntityController<CarSale,CarSaleViewModel, ICarSaleService>
+    public class CarSalesController : GenericEntityController<CarSale, CarSaleViewModel, ICarSaleService>
     {
-        private readonly ICarService _carService;
-        public CarSalesController(ICarSaleService carSaleService, ICarService carService) : base(carSaleService)
+        private readonly IRepairService _repairService;
+        public CarSalesController(ICarSaleService carSaleService, IRepairService repairService) : base(carSaleService)
         {
-            _carService = carService;
+            _repairService = repairService;
         }
 
         // Override la Create GET du contrôleur générique pour éviter l'ambiguïté.
@@ -40,6 +40,20 @@ namespace ExpressVoitures.Controllers
         {
             IEnumerable<string> modelErrors = _service.CheckModelErrors(viewModel);
 
+            //var repairs = _repairService.GetViewModels().Where(r => r.CarId == viewModel.CarId).ToList();
+
+            //if (repairs.Count > 0)
+            //{
+            //    foreach (var repair in repairs)
+            //    {
+            //        viewModel.SalePrice += repair.RepairCost;
+            //    }
+            //}
+
+            //viewModel.SalePrice += viewModel.PurchasePrice + 500f;
+
+            UpdateSalePrice(viewModel);  
+
             foreach (string error in modelErrors)
             {
                 ModelState.AddModelError("", error);
@@ -56,6 +70,43 @@ namespace ExpressVoitures.Controllers
                 TempData["Error"] = "Informations invalides.";
                 return RedirectToAction("Edit", "Cars", new { id = viewModel.CarId });
             }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public override IActionResult Edit(CarSaleViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                SetViewDatas();
+                return View(viewModel);
+            }
+
+            UpdateSalePrice(viewModel);
+
+            _service.Update(viewModel);
+
+            TempData["Success"] = "La fiche de vente a été mise à jour.";
+            return RedirectToAction("Edit", "Cars", new { id = viewModel.CarId });
+        }
+
+
+        private void UpdateSalePrice(CarSaleViewModel viewModel)
+        {
+            var salePrice = 0f;
+
+            var repairs = _repairService.GetViewModels().Where(r => r.CarId == viewModel.CarId).ToList();
+            if (repairs.Count > 0)
+            {
+                foreach (var repair in repairs)
+                {
+                    salePrice += repair.RepairCost;
+                }
+            }
+            salePrice += viewModel.PurchasePrice + 500f;
+
+            viewModel.SalePrice = salePrice;
         }
     }
 }
