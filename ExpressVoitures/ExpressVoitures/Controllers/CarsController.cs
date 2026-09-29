@@ -22,14 +22,17 @@ namespace ExpressVoitures.Controllers
 
         private readonly IRepairService _repairService;
 
+        private readonly ICarSaleService _carSaleService;
+
         private readonly string pictureFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "ExpressVoitures");
 
-        public CarsController(ICarService carService, ICarMakeService carMakeService, ICarModelService carModelService, ICarTrimService carTrimService, IRepairService repairService) : base(carService)
+        public CarsController(ICarService carService, ICarMakeService carMakeService, ICarModelService carModelService, ICarTrimService carTrimService, IRepairService repairService, ICarSaleService carSaleService) : base(carService)
         {
             _carMakeService = carMakeService;
             _carModelService = carModelService;
             _carTrimService = carTrimService;
             _repairService = repairService;
+            _carSaleService = carSaleService;
         }
 
         public override IActionResult Index()
@@ -193,12 +196,16 @@ namespace ExpressVoitures.Controllers
                 .OrderBy(m => m.Name)
                 .ToList();
             ViewData[ViewDataKeys.Trims] = new SelectList(trims, "Id", "Name", vm.TrimId);
-            
+
             var repairs = _repairService.GetViewModels()
                 .Where(r => r.CarId == vm.Id)
                 .OrderBy(r => r.Description)
                 .ToList();
             ViewData[ViewDataKeys.Repairs] = repairs;
+
+            var sale = _carSaleService.GetViewModels()
+                .FirstOrDefault(r => r.CarId == vm.Id);
+            ViewData[ViewDataKeys.Sales] = sale;
 
             return View(vm);
         }
@@ -229,7 +236,7 @@ namespace ExpressVoitures.Controllers
                         if (!Directory.Exists(pictureFolderPath))
                             Directory.CreateDirectory(pictureFolderPath);
 
-                        var fileName = string.IsNullOrEmpty(viewModel.PictureId)? $"{Guid.NewGuid()}{ext}" : viewModel.PictureId;
+                        var fileName = string.IsNullOrEmpty(viewModel.PictureId) ? $"{Guid.NewGuid()}{ext}" : viewModel.PictureId;
                         var fullPath = Path.Combine(pictureFolderPath, fileName);
                         using (var stream = new FileStream(fullPath, FileMode.Create))
                         {

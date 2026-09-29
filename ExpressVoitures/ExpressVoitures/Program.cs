@@ -34,6 +34,8 @@ builder.Services.AddTransient<ICarService, CarService>();
 builder.Services.AddTransient<IRepairRepository, RepairRepository>();
 builder.Services.AddTransient<IRepairService, RepairService>();
 
+builder.Services.AddTransient<ICarSaleRepository, CarSaleRepository>();
+builder.Services.AddTransient<ICarSaleService, CarSaleService>();
 
 builder.Services.AddAutoMapper(cfg =>
 {
@@ -42,6 +44,7 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<CarTrimProfile>();
     cfg.AddProfile<CarProfile>();
     cfg.AddProfile<RepairProfile>();
+    cfg.AddProfile<CarSaleProfile>();
 });
 
 var app = builder.Build();

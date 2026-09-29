@@ -66,6 +66,55 @@
 </form>
 
 @{
+	var sale = ViewData[ViewDataKeys.Sales] as ExpressVoitures.Models.ViewModels.CarSaleViewModel;
+
+	<h4>Fiche de vente</h4>
+
+	if (sale != null)
+	{
+		<table class="table table-bordered table-striped table-sm">
+			<thead>
+				<tr>
+					<th>
+						<label>PurchaseDate</label>
+					</th>
+					<th>
+						<label>AvailableForSaleDate</label>
+					</th>
+					<th>
+						<label>PurchasePrice</label>
+					</th>
+					<th>
+						<label>SalePrice</label>
+					</th>
+					<th>
+						<label>SaleDate</label>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>@sale.PurchaseDate</td>
+					<td>@sale.AvailableForSaleDate</td>
+					<td style="text-align:center">@sale.PurchasePrice</td>
+					<td style="text-align:center">@sale.SalePrice</td>
+					<td>@sale.SaleDate</td>
+				</tr>
+			</tbody>
+		</table>
+	}
+	else
+	{
+
+		<div class="button mb-3 col-2">
+		<a asp-controller="CarSales" asp-action="Create" asp-route-carId="@Model.Id">Créer fiche de vente</a>
+		</div>
+	}
+
+
+
+
+
 	<h4>Réparations</h4>
 
 	<form asp-action="Create" asp-controller="Repairs" method="post">
@@ -88,9 +137,9 @@
 		</div>
 	</form>
 
-	var items = ViewData[ViewDataKeys.Repairs] as IEnumerable<ExpressVoitures.Models.ViewModels.RepairViewModel>;
+	var repairs = ViewData[ViewDataKeys.Repairs] as IEnumerable<ExpressVoitures.Models.ViewModels.RepairViewModel>;
 
-	if (items != null && items.Any())
+	if (repairs != null && repairs.Any())
 	{
 		<div class="row">
 			<div class="col-5"><strong>Description</strong></div>
@@ -98,23 +147,23 @@
 			<div class="col-2 text-end"><strong>Actions</strong></div>
 		</div>
 
-		@foreach (var item in items)
+		@foreach (var repair in repairs)
 		{
 			<div class="row border-top py-2 align-items-center">
 				<div class="col-5">
-					@item.Description
+					@repair.Description
 				</div>
 				<div class="col-5">
-					@item.RepairCost.ToString("0.00") €
+					@repair.RepairCost.ToString("0.00") €
 				</div>
 				<div class="col-2 text-end">
-					<form id="deleteRepair_@item.Id" asp-action="Delete" asp-controller="Repairs" method="post" class="d-inline" onsubmit="return confirm('Confirmer la suppression ?');">
+					<form id="deleteRepair_@repair.Id" asp-action="Delete" asp-controller="Repairs" method="post" class="d-inline" onsubmit="return confirm('Confirmer la suppression ?');">
 						@Html.AntiForgeryToken()
-						<input type="hidden" name="Id" value="@item.Id" />
-						<input type="hidden" name="CarId" value="@item.CarId" />
+						<input type="hidden" name="Id" value="@repair.Id" />
+						<input type="hidden" name="CarId" value="@repair.CarId" />
 						<button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
 					</form>
-					<a asp-action="Edit" asp-controller="Repairs" asp-route-id="@item.Id" class="btn btn-sm btn-secondary ms-1">Éditer</a>
+					<a asp-action="Edit" asp-controller="Repairs" asp-route-id="@repair.Id" class="btn btn-sm btn-secondary ms-1">Éditer</a>
 				</div>
 			</div>
 		}

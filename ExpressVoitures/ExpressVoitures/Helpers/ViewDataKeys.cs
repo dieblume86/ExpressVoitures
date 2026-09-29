@@ -8,5 +8,6 @@ namespace ExpressVoitures.Helpers
         public const string Trims = "Trims";
         public const string Cars = "Cars";
         public const string Repairs = "Repairs";
+        public const string Sales = "Sales";
     }
 }
