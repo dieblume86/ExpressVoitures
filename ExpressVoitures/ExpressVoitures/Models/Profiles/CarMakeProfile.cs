@@ -9,7 +9,8 @@ namespace ExpressVoitures.Models.Profiles
         public CarMakeProfile()
         {
             CreateMap<CarMake, CarMakeViewModel>();
-            CreateMap<CarMakeViewModel, CarMake>();
+            CreateMap<CarMakeViewModel, CarMake>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
         }
     }
 }

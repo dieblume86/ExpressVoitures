@@ -4,6 +4,7 @@ using ExpressVoitures.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpressVoitures.Controllers
 {
@@ -15,20 +16,12 @@ namespace ExpressVoitures.Controllers
             _repairService = repairService;
         }
 
-        // Override la Create GET du contrôleur générique pour éviter l'ambiguïté.
-        // On lit optionnellement carId depuis la query string et on pré-remplit le ViewModel.
         [Authorize]
-        [HttpGet]
-        public override IActionResult Create()
+        [HttpGet("CarSales/Create/{carId}")]
+        public IActionResult Create(int carId)
         {
             var vm = new CarSaleViewModel();
-
-            // Récupère carId depuis la query string si présent : /CarSales/Create?carId=123
-            var carIdStr = HttpContext.Request.Query["carId"].FirstOrDefault();
-            if (int.TryParse(carIdStr, out var carId))
-            {
-                vm.CarId = carId;
-            }
+            vm.CarId = carId;
 
             return View(vm);
         }
@@ -40,19 +33,7 @@ namespace ExpressVoitures.Controllers
         {
             IEnumerable<string> modelErrors = _service.CheckModelErrors(viewModel);
 
-            //var repairs = _repairService.GetViewModels().Where(r => r.CarId == viewModel.CarId).ToList();
-
-            //if (repairs.Count > 0)
-            //{
-            //    foreach (var repair in repairs)
-            //    {
-            //        viewModel.SalePrice += repair.RepairCost;
-            //    }
-            //}
-
-            //viewModel.SalePrice += viewModel.PurchasePrice + 500f;
-
-            UpdateSalePrice(viewModel);  
+            UpdateSalePrice(viewModel);
 
             foreach (string error in modelErrors)
             {
@@ -91,6 +72,42 @@ namespace ExpressVoitures.Controllers
             return RedirectToAction("Edit", "Cars", new { id = viewModel.CarId });
         }
 
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public override IActionResult Delete(int id)
+        {
+            // Récupère l'id de la voiture avant suppression pour pouvoir rediriger correctement
+            var carId = 0;
+            try
+            {
+                var vm = _service.GetViewModel(id);
+                if (vm != null)
+                {
+                    carId = vm.CarId;
+                }
+
+                _service.Delete(id);
+                TempData["Success"] = "La fiche de vente a été supprimée.";
+            }
+            catch (DbUpdateException)
+            {
+                // Erreur typique : contrainte FK (des modèles/voitures liées)
+                TempData["Error"] = "Impossible de supprimer cette fiche de vente : des enregistrements liés existent.";
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Une erreur est survenue lors de la suppression.";
+            }
+
+            // Si carId vaut 0, on redirige vers la page Create des voitures (comportement existant précédemment)
+            if (carId > 0)
+            {
+                return RedirectToAction("Edit", "Cars", new { id = carId });
+            }
+
+            return RedirectToAction("Index", "Cars");
+        }
 
         private void UpdateSalePrice(CarSaleViewModel viewModel)
         {

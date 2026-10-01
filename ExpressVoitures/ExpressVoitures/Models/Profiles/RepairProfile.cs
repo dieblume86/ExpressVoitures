@@ -9,7 +9,8 @@ namespace ExpressVoitures.Models.Profiles
         public RepairProfile()
         {
             CreateMap<Repair, RepairViewModel>();
-            CreateMap<RepairViewModel, Repair>();
+            CreateMap<RepairViewModel, Repair>()
+                        .ForMember(dest => dest.Id, opt => opt.Ignore());
         }
     }
 }

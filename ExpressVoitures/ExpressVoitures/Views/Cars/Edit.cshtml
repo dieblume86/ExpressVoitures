@@ -71,7 +71,14 @@
 
 	<h4>Fiche de vente</h4>
 
-	if (sale != null)
+	if (sale == null)
+	{
+
+		<div class="button mb-3 col-2">
+			<a asp-controller="CarSales" asp-action="Create" asp-route-carId="@Model.Id">Créer fiche de vente</a>
+		</div>
+	}
+	else
 	{
 		<table class="table table-bordered table-striped table-sm">
 			<thead>
@@ -104,22 +111,18 @@
 					<td style="text-align:center">@sale.SalePrice</td>
 					<td>@FormatDisplay(sale?.SaleDate)</td>
 					<td>
+						<form id="deleteRepair_@sale.Id" asp-action="Delete" asp-controller="CarSales" method="post" class="d-inline" ;">
+							@Html.AntiForgeryToken()
+							<input type="hidden" name="Id" value="@sale.Id" />
+							<input type="hidden" name="CarId" value="@sale.CarId" />
+							<button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+						</form>
 						<a asp-action="Delete" asp-controller="CarSales" asp-route-id="@sale.Id" class="btn btn-sm btn-secondary ms-1">Supprimer</a>
-
-						<a asp-action="Edit" asp-controller="CarSales" asp-route-id="@sale.Id" class="btn btn-sm btn-secondary ms-1">Éditer</a>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 	}
-	else
-	{
-
-		<div class="button mb-3 col-2">
-		<a asp-controller="CarSales" asp-action="Create" asp-route-carId="@Model.Id">Créer fiche de vente</a>
-		</div>
-	}
-
 
 
 
