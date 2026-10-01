@@ -33,7 +33,7 @@ namespace ExpressVoitures.Controllers
         {
             IEnumerable<string> modelErrors = _service.CheckModelErrors(viewModel);
 
-            UpdateSalePrice(viewModel);
+            _service.FillViewModel(viewModel);
 
             foreach (string error in modelErrors)
             {
@@ -64,7 +64,7 @@ namespace ExpressVoitures.Controllers
                 return View(viewModel);
             }
 
-            UpdateSalePrice(viewModel);
+            _service.FillViewModel(viewModel);
 
             _service.Update(viewModel);
 
@@ -107,23 +107,6 @@ namespace ExpressVoitures.Controllers
             }
 
             return RedirectToAction("Index", "Cars");
-        }
-
-        private void UpdateSalePrice(CarSaleViewModel viewModel)
-        {
-            var salePrice = 0f;
-
-            var repairs = _repairService.GetViewModels().Where(r => r.CarId == viewModel.CarId).ToList();
-            if (repairs.Count > 0)
-            {
-                foreach (var repair in repairs)
-                {
-                    salePrice += repair.RepairCost;
-                }
-            }
-            salePrice += viewModel.PurchasePrice + 500f;
-
-            viewModel.SalePrice = salePrice;
         }
     }
 }

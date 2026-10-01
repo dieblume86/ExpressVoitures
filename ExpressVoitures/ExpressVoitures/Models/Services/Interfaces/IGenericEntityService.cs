@@ -11,6 +11,8 @@ namespace ExpressVoitures.Models.Services.Interfaces
         ViewModel GetViewModel(int id);
         List<ViewModel> GetViewModels();
 
+        void FillViewModel(ViewModel viewModel);
+
         void Add(ViewModel viewModel);
         void Update(ViewModel viewModel);
 

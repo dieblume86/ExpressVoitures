@@ -50,7 +50,38 @@ namespace ExpressVoitures.Models.Services
 
         public virtual void Update(ViewModel viewModel)
         {
-            _entityRepository.Update(AutoMapToEntity(viewModel));
+            // Try to retrieve an Id from the ViewModel (convention "Id")
+            var idProp = viewModel?.GetType().GetProperty("Id");
+            if (idProp == null)
+            {
+                // No Id on the ViewModel: legacy behavior (map to a new entity)
+                _entityRepository.Update(AutoMapToEntity(viewModel));
+                return;
+            }
+
+            var idObj = idProp.GetValue(viewModel);
+            int id = Convert.ToInt32(idObj ?? 0);
+
+            if (id == 0)
+            {
+                // Id not provided: fallback to Add to avoid incorrect insertion
+                _entityRepository.Add(AutoMapToEntity(viewModel));
+                return;
+            }
+
+            // Retrieve the existing entity and map the VM values onto it
+            var existing = _entityRepository.GetById(id);
+            if (existing == null)
+            {
+                // If not found, create anyway (or throw an exception according to policy)
+                _entityRepository.Add(AutoMapToEntity(viewModel));
+                return;
+            }
+
+            // Map the properties from the ViewModel onto the existing entity — preserve the Id
+            _mapper.Map(viewModel, existing);
+
+            _entityRepository.Update(existing);
         }
 
         public virtual List<string> CheckModelErrors(ViewModel viewModel)
@@ -84,5 +115,7 @@ namespace ExpressVoitures.Models.Services
         {
             return _mapper.Map<ViewModel>(entity);
         }
+
+        public virtual void FillViewModel(ViewModel viewModel) { }
     }
 }
