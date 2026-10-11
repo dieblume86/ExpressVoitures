@@ -7,7 +7,7 @@ namespace ExpressVoitures.Models.Repositories.Interfaces
         T GetById(int id);
         IEnumerable<T> GetAll();
         IEnumerable<T> Find(Expression<Func<T, bool>> expression);
-        void Add(T entity);
+        int Add(T entity);
         void AddRange(IEnumerable<T> entities);
         void Update(T entity);
         void Remove(int id);

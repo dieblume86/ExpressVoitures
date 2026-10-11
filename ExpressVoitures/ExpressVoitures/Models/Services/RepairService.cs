@@ -17,9 +17,9 @@ namespace ExpressVoitures.Models.Services
             _scopeFactory = scopeFactory;
         }
 
-        public override void Add(RepairViewModel viewModel)
+        public override int Add(RepairViewModel viewModel)
         {
-            base.Add(viewModel);
+            int id = base.Add(viewModel);
             // After adding, recalculate the related car sale if it exists
             try
             {
@@ -29,6 +29,8 @@ namespace ExpressVoitures.Models.Services
             {
                 // do not fail the repair creation if updating the car sale fails
             }
+
+            return id;
         }
 
         public override void Update(RepairViewModel viewModel)

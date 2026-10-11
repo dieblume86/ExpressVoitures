@@ -12,10 +12,23 @@ namespace ExpressVoitures.Models.Repositories
             _context = context;
         }
 
-        public virtual void Add(T entity)
+        public virtual int Add(T entity)
         {
-            _context.Set<T>().Add(entity);
+            var entry = _context.Set<T>().Add(entity);
             _context.SaveChanges();
+
+            var pk = entry.Metadata.FindPrimaryKey();
+            if (pk != null && pk.Properties.Count > 0)
+            {
+                var keyName = pk.Properties[0].Name;
+                var prop = entry.Property(keyName);
+                if (prop != null && prop.CurrentValue != null)
+                {
+                    return Convert.ToInt32(prop.CurrentValue);
+                }
+            }
+
+            return 0;
         }
 
         public virtual void AddRange(IEnumerable<T> entities)

@@ -122,10 +122,10 @@ namespace ExpressVoitures.Controllers
 
             if (ModelState.IsValid)
             {
-                _service.Add(viewModel);
+                var carId = _service.Add(viewModel);
 
                 TempData["Success"] = "Success.";
-                return RedirectToAction(nameof(Details), viewModel.Id);
+                return RedirectToAction(nameof(Details), new { id = carId });
             }
             else
             {
@@ -272,38 +272,6 @@ namespace ExpressVoitures.Controllers
                 return RedirectToAction(nameof(Edit), new { id = viewModel.Id });
             }
         }
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public override IActionResult Edit(CarViewModel vm)
-        //{
-        //    var selectedMakeId = vm.Trim?.Model?.MakeId ?? 0;
-        //    var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name).ToList();
-        //    ViewData[ViewDataKeys.Makes] = new SelectList(makes, "Id", "Name", selectedMakeId);
-
-        //    var selectedModelId = vm.Trim?.ModelId ?? 0;
-        //    var models = _carModelService.GetViewModels()
-        //        .Where(m => m.MakeId == selectedMakeId)
-        //        .OrderBy(m => m.Name)
-        //        .ToList();
-        //    ViewData[ViewDataKeys.Models] = new SelectList(models, "Id", "Name", vm.Trim.ModelId);
-
-        //    var selectedTrimId = vm.Trim?.Model?.MakeId ?? 0;
-        //    var trims = _carTrimService.GetViewModels()
-        //        .Where(m => m.ModelId == vm.Trim.ModelId)
-        //        .OrderBy(m => m.Name)
-        //        .ToList();
-        //    ViewData[ViewDataKeys.Trims] = new SelectList(trims, "Id", "Name", vm.TrimId);
-
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(vm);
-        //    }
-
-        //    _service.Update(vm);
-        //    TempData["Success"] = "Finition mise à jour.";
-        //    return RedirectToAction(nameof(Create));
-        //}
-
 
         protected override void SetViewDatas()
         {

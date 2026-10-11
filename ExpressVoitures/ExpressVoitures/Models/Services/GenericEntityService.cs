@@ -43,9 +43,9 @@ namespace ExpressVoitures.Models.Services
         }
 
 
-        public virtual void Add(ViewModel viewModel)
+        public virtual int Add(ViewModel viewModel)
         {
-            _entityRepository.Add(AutoMapToEntity(viewModel));
+            return _entityRepository.Add(AutoMapToEntity(viewModel));
         }
 
         public virtual void Update(ViewModel viewModel)

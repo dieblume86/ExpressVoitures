@@ -13,7 +13,7 @@ namespace ExpressVoitures.Models.Services.Interfaces
 
         void FillViewModel(ViewModel viewModel);
 
-        void Add(ViewModel viewModel);
+        int Add(ViewModel viewModel);
         void Update(ViewModel viewModel);
 
         List<string> CheckModelErrors(ViewModel viewModel);
