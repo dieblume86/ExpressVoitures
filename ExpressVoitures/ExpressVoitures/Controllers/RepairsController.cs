@@ -33,13 +33,6 @@ namespace ExpressVoitures.Controllers
                 return RedirectToAction("Edit", "Cars", new { id = model.CarId });
             }
 
-            //var carSale = _carSaleService.GetViewModel(model.CarId);
-
-            //if(carSale != null)
-            //{
-
-            //}
-
             _service.Add(model);
             TempData["Success"] = "Réparation ajoutée.";
             return RedirectToAction("Edit", "Cars", new { id = model.CarId });
@@ -52,7 +45,7 @@ namespace ExpressVoitures.Controllers
         {
             if (!ModelState.IsValid)
             {
-                SetViewDatas();
+                _service.FillEditViewData(viewModel, ViewData);
                 return View(viewModel);
             }
 

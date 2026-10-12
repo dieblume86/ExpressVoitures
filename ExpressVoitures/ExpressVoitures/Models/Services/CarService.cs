@@ -11,11 +11,8 @@ namespace ExpressVoitures.Models.Services
 {
     public class CarService : GenericEntityService<Car, CarViewModel>, ICarService
     {
-        private readonly IServiceScopeFactory _scopeFactory;
-
-        public CarService(ICarRepository carRepository, IMapper mapper, IServiceScopeFactory scopeFactory) : base(carRepository, mapper)
+        public CarService(ICarRepository carRepository, IMapper mapper, IServiceScopeFactory scopeFactory) : base(carRepository, mapper, scopeFactory)
         {
-            _scopeFactory = scopeFactory;
         }
 
         public override void FillViewModel(CarViewModel viewModel)

@@ -7,12 +7,8 @@ namespace ExpressVoitures.Models.Services
 {
     public class CarSaleService : GenericEntityService<CarSale, CarSaleViewModel>, ICarSaleService
     {
-        // Avoid circular dependency by using IServiceScopeFactory to resolve IRepairService when needed
-        private readonly IServiceScopeFactory _scopeFactory;
-
-        public CarSaleService(ICarSaleRepository carSaleRepository, IMapper mapper, IServiceScopeFactory scopeFactory) : base(carSaleRepository, mapper)
+        public CarSaleService(ICarSaleRepository carSaleRepository, IMapper mapper, IServiceScopeFactory scopeFactory) : base(carSaleRepository, mapper, scopeFactory)
         {
-            _scopeFactory = scopeFactory;
         }
 
         public override void FillViewModel(CarSaleViewModel viewModel)

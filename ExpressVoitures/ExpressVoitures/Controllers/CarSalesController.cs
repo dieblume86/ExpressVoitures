@@ -60,7 +60,7 @@ namespace ExpressVoitures.Controllers
         {
             if (!ModelState.IsValid)
             {
-                SetViewDatas();
+                _service.FillEditViewData(viewModel, ViewData);
                 return View(viewModel);
             }
 

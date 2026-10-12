@@ -12,31 +12,10 @@ namespace ExpressVoitures.Controllers
 {
     public class CarsController : GenericEntityController<Car, CarViewModel, ICarService>
     {
-        //private readonly ICarMakeService _carMakeService;
-        //private const string unknownMake = "Marque inconnue";
-
-        //private readonly ICarModelService _carModelService;
-        //private const string unknownModel = "Modèle inconnu";
-
-        //private readonly ICarTrimService _carTrimService;
-        //private const string unknownTrim = "Finition inconnue";
-
-        //private readonly IRepairService _repairService;
-
-        //private readonly ICarSaleService _carSaleService;
-
         private readonly string pictureFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "ExpressVoitures");
         public CarsController(ICarService carService) : base(carService)
         {
         }
-        //public CarsController(ICarService carService, ICarMakeService carMakeService, ICarModelService carModelService, ICarTrimService carTrimService, IRepairService repairService, ICarSaleService carSaleService) : base(carService)
-        //{
-        //    _carMakeService = carMakeService;
-        //    _carModelService = carModelService;
-        //    _carTrimService = carTrimService;
-        //    _repairService = repairService;
-        //    _carSaleService = carSaleService;
-        //}
 
         public override IActionResult Index()
         {
@@ -247,16 +226,6 @@ namespace ExpressVoitures.Controllers
                 TempData["Error"] = "Une erreur est survenue.";
                 return RedirectToAction(nameof(Edit), new { id = viewModel.Id });
             }
-        }
-
-        protected override void SetViewDatas()
-        {
-            _service.FillCreateViewData(ViewData);
-
-            ViewData[ViewDataKeys.ExistingItems] = _service.GetViewModels().OrderBy(m => m.Trim?.Model?.Make?.Name)
-                .ThenBy(m => m.Trim?.Model?.Name)
-                .ThenBy(m => m.Trim?.Name)
-                .ToList();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ExpressVoitures.Helpers;
 using ExpressVoitures.Models.Entities;
+using ExpressVoitures.Models.Services;
 using ExpressVoitures.Models.Services.Interfaces;
 using ExpressVoitures.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -9,12 +10,8 @@ namespace ExpressVoitures.Controllers
 {
     public class CarModelsController : GenericEntityController<CarModel, CarModelViewModel, ICarModelService>
     {
-        private readonly ICarMakeService _carMakeService;
-        private const string unknownMake = "Marque inconnue";
-
-        public CarModelsController(ICarModelService carModelService, ICarMakeService carMakeService) : base(carModelService)
+        public CarModelsController(ICarModelService carModelService) : base(carModelService)
         {
-            _carMakeService = carMakeService;
         }
 
         // Endpoint pour AJAX : retourne les modèles d'une marque donnée
@@ -28,26 +25,6 @@ namespace ExpressVoitures.Controllers
                 .ToList();
 
             return Json(models);
-        }
-
-        protected override void SetViewDatas()
-        {
-            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
-            ViewData["Makes"] = new SelectList(makes, "Id", "Name");
-
-            ViewData[ViewDataKeys.ExistingItems] = GetCarModelsWithMakes();
-        }
-        private List<CarModelViewModel> GetCarModelsWithMakes()
-        {
-            var collection = _service.GetViewModels();
-            
-            foreach (var item in collection)
-            {
-                var makeVm = _carMakeService.GetViewModel(item.MakeId);
-                item.Make = makeVm ?? new CarMakeViewModel { Id = 0, Name = unknownMake };
-            }
-
-            return collection.OrderBy(m => m.Make?.Name).ThenBy(m => m.Name).ToList();
         }
     }
 }

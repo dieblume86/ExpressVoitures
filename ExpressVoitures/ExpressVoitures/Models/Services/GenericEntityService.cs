@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ExpressVoitures.Helpers;
 using ExpressVoitures.Models.Repositories.Interfaces;
 using ExpressVoitures.Models.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -8,22 +9,23 @@ namespace ExpressVoitures.Models.Services
 {
     public abstract class GenericEntityService<Entity, ViewModel> : IGenericEntityService<Entity, ViewModel>
         where Entity : class
-        where ViewModel : class
+        where ViewModel : class, new()
     {
         protected readonly IGenericRepository<Entity> _entityRepository;
         protected readonly IMapper _mapper;
+        protected readonly IServiceScopeFactory _scopeFactory;
 
-
-        public GenericEntityService(IGenericRepository<Entity> repository, IMapper mapper)
+        public GenericEntityService(IGenericRepository<Entity> repository, IMapper mapper, IServiceScopeFactory scopeFactory)
         {
             _entityRepository = repository;
             _mapper = mapper;
+            _scopeFactory = scopeFactory;
         }
 
 
         public virtual Entity GetEntity(int id)
         {
-           return _entityRepository.GetById(id);
+            return _entityRepository.GetById(id);
         }
         public virtual List<Entity> GetAllEntities()
         {
@@ -34,6 +36,9 @@ namespace ExpressVoitures.Models.Services
         {
             var viewModel = AutoMapToViewModel(GetEntity(id));
 
+            if(viewModel == null)
+                return new ViewModel();
+
             FillViewModel(viewModel);
 
             return viewModel;
@@ -42,7 +47,7 @@ namespace ExpressVoitures.Models.Services
         {
             List<ViewModel> viewModels = new();
 
-            GetAllEntities().ForEach(entity => 
+            GetAllEntities().ForEach(entity =>
             {
                 var viewModel = AutoMapToViewModel(entity);
                 FillViewModel(viewModel);

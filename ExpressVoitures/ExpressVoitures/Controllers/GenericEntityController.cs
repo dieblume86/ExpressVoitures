@@ -31,7 +31,7 @@ namespace ExpressVoitures.Controllers
         [HttpGet]
         public virtual IActionResult Create()
         {
-            SetViewDatas();
+            _service.FillCreateViewData(ViewData);
 
             return View(new TViewModel());
         }
@@ -71,7 +71,7 @@ namespace ExpressVoitures.Controllers
             if (vm == null) 
                 return NotFound();
 
-            SetViewDatas();
+            _service.FillEditViewData(vm, ViewData);
 
             return View(vm);
         }
@@ -82,7 +82,7 @@ namespace ExpressVoitures.Controllers
         {
             if (!ModelState.IsValid)
             {
-                SetViewDatas();
+               _service.FillEditViewData(viewModel, ViewData);
                 return View(viewModel);
             }
 
@@ -113,12 +113,6 @@ namespace ExpressVoitures.Controllers
             }
 
             return RedirectToAction(nameof(Create));
-        }
-
-
-        protected virtual void SetViewDatas()
-        {
-            ViewData[ViewDataKeys.ExistingItems] = _service.GetViewModels();
         }
     }
 }
