@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using System.ComponentModel.DataAnnotations;
 
 namespace ExpressVoitures.Models.Services.Interfaces
 {
@@ -12,6 +13,8 @@ namespace ExpressVoitures.Models.Services.Interfaces
         List<ViewModel> GetViewModels();
 
         void FillViewModel(ViewModel viewModel);
+        void FillCreateViewData(ViewDataDictionary ViewData);
+        void FillEditViewData(ViewModel viewModel, ViewDataDictionary ViewData);
 
         int Add(ViewModel viewModel);
         void Update(ViewModel viewModel);

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ExpressVoitures.Models.Repositories.Interfaces;
 using ExpressVoitures.Models.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.ComponentModel.DataAnnotations;
 
 namespace ExpressVoitures.Models.Services
@@ -31,13 +32,22 @@ namespace ExpressVoitures.Models.Services
 
         public virtual ViewModel GetViewModel(int id)
         {
-           return AutoMapToViewModel(GetEntity(id));
+            var viewModel = AutoMapToViewModel(GetEntity(id));
+
+            FillViewModel(viewModel);
+
+            return viewModel;
         }
         public virtual List<ViewModel> GetViewModels()
         {
             List<ViewModel> viewModels = new();
 
-            GetAllEntities().ForEach(entity => viewModels.Add(AutoMapToViewModel(entity)));
+            GetAllEntities().ForEach(entity => 
+            {
+                var viewModel = AutoMapToViewModel(entity);
+                FillViewModel(viewModel);
+                viewModels.Add(viewModel);
+            });
 
             return viewModels;
         }
@@ -117,5 +127,7 @@ namespace ExpressVoitures.Models.Services
         }
 
         public virtual void FillViewModel(ViewModel viewModel) { }
+        public virtual void FillCreateViewData(ViewDataDictionary viewData) { }
+        public virtual void FillEditViewData(ViewModel viewModel, ViewDataDictionary viewData) { }
     }
 }

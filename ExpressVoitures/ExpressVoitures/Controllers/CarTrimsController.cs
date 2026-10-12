@@ -1,4 +1,5 @@
-﻿using ExpressVoitures.Models.Entities;
+﻿using ExpressVoitures.Helpers;
+using ExpressVoitures.Models.Entities;
 using ExpressVoitures.Models.Services.Interfaces;
 using ExpressVoitures.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -91,7 +92,7 @@ namespace ExpressVoitures.Controllers
             var models = _carModelService.GetViewModels().OrderBy(m => m.Name);
             ViewData["Models"] = new SelectList(Enumerable.Empty<object>(), "Id", "Name");
 
-            ViewData[dataExistingItems] = GetCarTrimsWithParents();
+            ViewData[ViewDataKeys.ExistingItems] = GetCarTrimsWithParents();
         }
         private List<CarTrimViewModel> GetCarTrimsWithParents()
         {

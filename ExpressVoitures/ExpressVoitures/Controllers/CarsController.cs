@@ -1,5 +1,6 @@
 ﻿using ExpressVoitures.Helpers;
 using ExpressVoitures.Models.Entities;
+using ExpressVoitures.Models.Services;
 using ExpressVoitures.Models.Services.Interfaces;
 using ExpressVoitures.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -11,39 +12,41 @@ namespace ExpressVoitures.Controllers
 {
     public class CarsController : GenericEntityController<Car, CarViewModel, ICarService>
     {
-        private readonly ICarMakeService _carMakeService;
-        private const string unknownMake = "Marque inconnue";
+        //private readonly ICarMakeService _carMakeService;
+        //private const string unknownMake = "Marque inconnue";
 
-        private readonly ICarModelService _carModelService;
-        private const string unknownModel = "Modèle inconnu";
+        //private readonly ICarModelService _carModelService;
+        //private const string unknownModel = "Modèle inconnu";
 
-        private readonly ICarTrimService _carTrimService;
-        private const string unknownTrim = "Finition inconnue";
+        //private readonly ICarTrimService _carTrimService;
+        //private const string unknownTrim = "Finition inconnue";
 
-        private readonly IRepairService _repairService;
+        //private readonly IRepairService _repairService;
 
-        private readonly ICarSaleService _carSaleService;
+        //private readonly ICarSaleService _carSaleService;
 
         private readonly string pictureFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "ExpressVoitures");
-
-        public CarsController(ICarService carService, ICarMakeService carMakeService, ICarModelService carModelService, ICarTrimService carTrimService, IRepairService repairService, ICarSaleService carSaleService) : base(carService)
+        public CarsController(ICarService carService) : base(carService)
         {
-            _carMakeService = carMakeService;
-            _carModelService = carModelService;
-            _carTrimService = carTrimService;
-            _repairService = repairService;
-            _carSaleService = carSaleService;
         }
+        //public CarsController(ICarService carService, ICarMakeService carMakeService, ICarModelService carModelService, ICarTrimService carTrimService, IRepairService repairService, ICarSaleService carSaleService) : base(carService)
+        //{
+        //    _carMakeService = carMakeService;
+        //    _carModelService = carModelService;
+        //    _carTrimService = carTrimService;
+        //    _repairService = repairService;
+        //    _carSaleService = carSaleService;
+        //}
 
         public override IActionResult Index()
         {
-            return View(GetCars());
+            return View(_service.GetViewModels());
         }
 
         [HttpGet]
         public IActionResult Details(int id)
         {
-            return View("_CarDetails", GetCar(id));
+            return View("_CarDetails", _service.GetViewModel(id));
         }
         [HttpGet]
         public IActionResult GetPicture(string pictureId)
@@ -177,35 +180,8 @@ namespace ExpressVoitures.Controllers
             if (vm == null)
                 return NotFound();
 
-            FillCarViewModel(vm);
-
-            var selectedMakeId = vm.Trim?.Model?.MakeId ?? 0;
-            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name).ToList();
-            ViewData[ViewDataKeys.Makes] = new SelectList(makes, "Id", "Name", selectedMakeId);
-
-            var selectedModelId = vm.Trim?.ModelId ?? 0;
-            var models = _carModelService.GetViewModels()
-                .Where(m => m.MakeId == selectedMakeId)
-                .OrderBy(m => m.Name)
-                .ToList();
-            ViewData[ViewDataKeys.Models] = new SelectList(models, "Id", "Name", vm.Trim.ModelId);
-
-            var selectedTrimId = vm.Trim?.Model?.MakeId ?? 0;
-            var trims = _carTrimService.GetViewModels()
-                .Where(m => m.ModelId == vm.Trim.ModelId)
-                .OrderBy(m => m.Name)
-                .ToList();
-            ViewData[ViewDataKeys.Trims] = new SelectList(trims, "Id", "Name", vm.TrimId);
-
-            var repairs = _repairService.GetViewModels()
-                .Where(r => r.CarId == vm.Id)
-                .OrderBy(r => r.Description)
-                .ToList();
-            ViewData[ViewDataKeys.Repairs] = repairs;
-
-            var sale = _carSaleService.GetViewModels()
-                .FirstOrDefault(r => r.CarId == vm.Id);
-            ViewData[ViewDataKeys.Sales] = sale;
+            _service.FillViewModel(vm);
+            _service.FillEditViewData(vm, ViewData);
 
             return View(vm);
         }
@@ -275,56 +251,12 @@ namespace ExpressVoitures.Controllers
 
         protected override void SetViewDatas()
         {
-            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
-            ViewData[ViewDataKeys.Makes] = new SelectList(makes, "Id", "Name");
+            _service.FillCreateViewData(ViewData);
 
-            var models = _carModelService.GetViewModels().OrderBy(m => m.Name);
-            ViewData[ViewDataKeys.Models] = new SelectList(Enumerable.Empty<object>(), "Id", "Name");
-
-            var trims = _carTrimService.GetViewModels().OrderBy(m => m.Name);
-            ViewData[ViewDataKeys.Trims] = new SelectList(Enumerable.Empty<object>(), "Id", "Name");
-
-            ViewData[dataExistingItems] = GetCars().OrderBy(m => m.Trim?.Model?.Make?.Name)
+            ViewData[ViewDataKeys.ExistingItems] = _service.GetViewModels().OrderBy(m => m.Trim?.Model?.Make?.Name)
                 .ThenBy(m => m.Trim?.Model?.Name)
                 .ThenBy(m => m.Trim?.Name)
                 .ToList();
-        }
-        private List<CarViewModel> GetCars()
-        {
-            var cars = _service.GetViewModels().ToList();
-
-            foreach (var car in cars)
-            {
-                FillCarViewModel(car);
-            }
-
-            return cars;
-        }
-        private CarViewModel GetCar(int id)
-        {
-            var vm = _service.GetViewModel(id);
-
-            if (vm == null)
-                return new CarViewModel();
-
-            FillCarViewModel(vm);
-
-            return vm;
-        }
-        private void FillCarViewModel(CarViewModel vm)
-        {
-            if (vm == null)
-                return;
-
-            vm.Trim = _carTrimService.GetViewModel(vm.TrimId);
-            if (vm.Trim != null)
-            {
-                vm.Trim.Model = _carModelService.GetViewModel(vm.Trim.ModelId);
-                if (vm.Trim.Model != null)
-                {
-                    vm.Trim.Model.Make = _carMakeService.GetViewModel(vm.Trim.Model.MakeId);
-                }
-            }
         }
     }
 }

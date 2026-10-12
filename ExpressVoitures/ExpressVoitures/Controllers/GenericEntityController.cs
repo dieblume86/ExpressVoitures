@@ -1,6 +1,5 @@
 ﻿using ExpressVoitures.Helpers;
 using ExpressVoitures.Models.Services.Interfaces;
-using ExpressVoitures.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +14,6 @@ namespace ExpressVoitures.Controllers
         where TService : IGenericEntityService<TEntity, TViewModel>
     {
         protected readonly TService _service;
-
-        protected const string dataExistingItems = ViewDataKeys.ExistingItems;
-
 
         public GenericEntityController(TService service)
         {
@@ -122,7 +118,7 @@ namespace ExpressVoitures.Controllers
 
         protected virtual void SetViewDatas()
         {
-            ViewData[dataExistingItems] = _service.GetViewModels();
+            ViewData[ViewDataKeys.ExistingItems] = _service.GetViewModels();
         }
     }
 }

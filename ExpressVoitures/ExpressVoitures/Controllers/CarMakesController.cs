@@ -1,4 +1,5 @@
-﻿using ExpressVoitures.Models.Entities;
+﻿using ExpressVoitures.Helpers;
+using ExpressVoitures.Models.Entities;
 using ExpressVoitures.Models.Services.Interfaces;
 using ExpressVoitures.Models.ViewModels;
 
@@ -13,7 +14,7 @@ namespace ExpressVoitures.Controllers
 
         protected override void SetViewDatas()
         {
-            ViewData[dataExistingItems] = _service.GetViewModels().OrderBy(m => m.Name);
+            ViewData[ViewDataKeys.ExistingItems] = _service.GetViewModels().OrderBy(m => m.Name);
         }
     }
 }

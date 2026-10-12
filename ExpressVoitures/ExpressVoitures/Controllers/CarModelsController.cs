@@ -1,4 +1,5 @@
-﻿using ExpressVoitures.Models.Entities;
+﻿using ExpressVoitures.Helpers;
+using ExpressVoitures.Models.Entities;
 using ExpressVoitures.Models.Services.Interfaces;
 using ExpressVoitures.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +35,7 @@ namespace ExpressVoitures.Controllers
             var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
             ViewData["Makes"] = new SelectList(makes, "Id", "Name");
 
-            ViewData[dataExistingItems] = GetCarModelsWithMakes();
+            ViewData[ViewDataKeys.ExistingItems] = GetCarModelsWithMakes();
         }
         private List<CarModelViewModel> GetCarModelsWithMakes()
         {
