@@ -34,6 +34,10 @@ namespace ExpressVoitures.Models.Services
             if (makeService == null)
                 return;
 
+            var saleService = _scopeFactory.CreateScope().ServiceProvider.GetService(typeof(ICarSaleService)) as ICarSaleService;
+            if (saleService == null)
+                return;
+
             viewModel.Trim = trimService.GetViewModel(viewModel.TrimId);
             if (viewModel.Trim != null)
             {
@@ -43,6 +47,8 @@ namespace ExpressVoitures.Models.Services
                     viewModel.Trim.Model.Make = makeService.GetViewModel(viewModel.Trim.Model.MakeId);
                 }
             }
+
+            viewModel.Sale = saleService.GetViewModels().FirstOrDefault(s => s.CarId == viewModel.Id);
         }
         public override void FillCreateViewData(ViewDataDictionary viewData)
         {

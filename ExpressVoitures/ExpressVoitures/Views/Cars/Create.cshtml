@@ -1,8 +1,13 @@
-﻿@using ExpressVoitures.Helpers 
+﻿@using ExpressVoitures.Helpers
 @model ExpressVoitures.Models.ViewModels.CarViewModel
 
 @{
 	ViewData["Title"] = "Create";
+
+	var minDate = "1990-01-01";
+	string FormatIso(DateTimeOffset d) => d.ToString("yyyy-MM-dd");
+	string FormatDisplay(DateTimeOffset d) => d.ToString("dd'/'MM'/'yyyy");
+
 	var placeholder = Url.Content("~/images/carImagePlaceHolder.JPG");
 	var pictureUrl = string.IsNullOrEmpty(Model?.PictureId) ? placeholder : Url.Action("GetPicture", "Cars", new { pictureId = Model.PictureId });
 }
@@ -58,6 +63,16 @@
 		<label>Année :</label>
 		<input asp-for="Year" class="form-control" />
 		<span asp-validation-for="Year" class="text-danger"></span>
+
+@* 		<label asp-for="Year" class="control-label"></label>
+		<input asp-for="Year" class="form-control" type="date" min="@minDate" value="@(Model != null && Model.Year.Year >= 1990 ? FormatIso(Model.Year) : string.Empty)" />
+		<small class="form-text text-muted date-display">@((Model != null && Model.Year.Year >= 1990) ? FormatDisplay(Model.Year) : "")</small>
+		<span asp-validation-for="Year" class="text-danger"></span>
+
+		<label asp-for="Year" class="control-label"></label>
+		<input asp-for="Year" class="form-control" type="date" min="@minDate" value="@(Model != null && Model.Year >= 1990 ? Model.Year : string.Empty)" />
+		<small class="form-text text-muted date-display">@((Model != null && Model.Year >= 1990) ? Model.Year : "")</small>
+		<span asp-validation-for="Year" class="text-danger"></span> *@
 	</div>
 	<div class="mb-3 col-6">
 		<div class="mb-2">

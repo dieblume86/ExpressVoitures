@@ -5,6 +5,8 @@
 @{
 	var placeholder = Url.Content("~/images/carImagePlaceHolder.JPG");
 	var pictureUrl = string.IsNullOrEmpty(Model?.PictureId) ? placeholder : Url.Action("GetPicture", "Cars", new { pictureId = Model.PictureId });
+
+	string FormatDisplay(DateTimeOffset d) => d.ToString("dd'/'MM'/'yyyy");
 }
 
 <a asp-controller="Cars" asp-action="Details" asp-route-id="@Model.Id" class="text-decoration-none text-dark">
@@ -17,11 +19,23 @@
 		</div>
 		<div class="col-md-12 col-lg-4 bg-light d-flex align-items-center py">
 			<ul class="listNoType">
-				<li><span>Prix de vente</span></li>
-				<li>@Model.Year</li>
-				<li>@Model.Trim.Model.Make?.Name</li>
-				<li>@Model.Trim.Model?.Name</li>
-				<li>@Model.Trim?.Name</li>
+				@if (Model?.Sale?.SaleDate != null)
+				{
+					<li><span>Vendu</span></li>
+					<br />
+				}
+		
+				<li><strong>Prix de vente : @Model?.Sale?.SalePrice€</strong></li>
+				<br />
+				<li>Année : @Model.Year</li>
+				<li>Marque : @Model.Trim.Model.Make?.Name</li>
+				<li>Modèle : @Model.Trim.Model?.Name</li>
+				<li>Finition : @Model.Trim?.Name</li>
+				@if (Model?.Sale?.AvailableForSaleDate != null && Model?.Sale?.SaleDate == null)
+				{
+					<br/>
+					<li>Disponible depuis le @FormatDisplay(Model.Sale.AvailableForSaleDate.Value)</li>
+				}
 			</ul>
 		</div>
 	</div>
