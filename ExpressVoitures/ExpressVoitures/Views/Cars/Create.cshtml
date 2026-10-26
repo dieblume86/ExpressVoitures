@@ -61,18 +61,14 @@
 	</div>
 	<div class="mb-3 col-6">
 		<label>Année :</label>
-		<input asp-for="Year" class="form-control" />
+		<select asp-for="Year" class="form-select">
+			<option value="">Sélectionner une année</option>
+			@for (int year = DateTime.Now.Year; year >= 1990; year--)
+			{
+				<option value="@year">@year</option>
+			}
+		</select>
 		<span asp-validation-for="Year" class="text-danger"></span>
-
-@* 		<label asp-for="Year" class="control-label"></label>
-		<input asp-for="Year" class="form-control" type="date" min="@minDate" value="@(Model != null && Model.Year.Year >= 1990 ? FormatIso(Model.Year) : string.Empty)" />
-		<small class="form-text text-muted date-display">@((Model != null && Model.Year.Year >= 1990) ? FormatDisplay(Model.Year) : "")</small>
-		<span asp-validation-for="Year" class="text-danger"></span>
-
-		<label asp-for="Year" class="control-label"></label>
-		<input asp-for="Year" class="form-control" type="date" min="@minDate" value="@(Model != null && Model.Year >= 1990 ? Model.Year : string.Empty)" />
-		<small class="form-text text-muted date-display">@((Model != null && Model.Year >= 1990) ? Model.Year : "")</small>
-		<span asp-validation-for="Year" class="text-danger"></span> *@
 	</div>
 	<div class="mb-3 col-6">
 		<div class="mb-2">

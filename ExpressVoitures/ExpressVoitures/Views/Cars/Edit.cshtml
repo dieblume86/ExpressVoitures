@@ -47,7 +47,13 @@
 	</div>
 	<div class="mb-3 col-6">
 		<label>Année :</label>
-		<input asp-for="Year" class="form-control" />
+		<select asp-for="Year" class="form-select">
+			<option value="">Sélectionner une année</option>
+			@for (int year = DateTime.Now.Year; year >= 1990; year--)
+			{
+				<option value="@year">@year</option>
+			}
+		</select>
 		<span asp-validation-for="Year" class="text-danger"></span>
 	</div>
 

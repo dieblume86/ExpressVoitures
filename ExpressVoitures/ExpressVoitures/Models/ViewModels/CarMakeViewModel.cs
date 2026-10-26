@@ -7,7 +7,7 @@ namespace ExpressVoitures.Models.ViewModels
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "MissingName")]
+        [Required(ErrorMessage = "Un nom est requis")]
         public string Name { get; set; }
     }
 }
