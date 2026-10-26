@@ -1,10 +1,7 @@
-﻿using ExpressVoitures.Helpers;
-using ExpressVoitures.Models.Entities;
-using ExpressVoitures.Models.Services;
+﻿using ExpressVoitures.Models.Entities;
 using ExpressVoitures.Models.Services.Interfaces;
 using ExpressVoitures.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ExpressVoitures.Controllers
 {
@@ -26,5 +23,5 @@ namespace ExpressVoitures.Controllers
 
             return Json(models);
         }
-    }
+     }
 }

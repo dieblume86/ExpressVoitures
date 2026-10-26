@@ -7,10 +7,10 @@ namespace ExpressVoitures.Models.ViewModels
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "MissingName")]
+        [Required(ErrorMessage = "Un nom est requis")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "MissingMakeId")]
+        [Required(ErrorMessage = "Une marque est requise")]
         public int MakeId { get; set; }
 
 

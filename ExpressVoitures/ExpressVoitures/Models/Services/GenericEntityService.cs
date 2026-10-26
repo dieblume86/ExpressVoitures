@@ -117,7 +117,7 @@ namespace ExpressVoitures.Models.Services
 
             return results;
         }
-        public virtual bool AlreadyExists<T>(T value, out string error)
+        public virtual bool AlreadyExists(ViewModel viewModel, out string error)
         {
             error = string.Empty;
             return false;

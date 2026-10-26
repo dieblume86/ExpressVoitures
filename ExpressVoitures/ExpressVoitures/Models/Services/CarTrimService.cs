@@ -37,7 +37,7 @@ namespace ExpressVoitures.Models.Services
             var models = _carModelService.GetViewModels().OrderBy(m => m.Name);
             viewData[ViewDataKeys.Models] = new SelectList(Enumerable.Empty<object>(), "Id", "Name");
 
-            viewData[ViewDataKeys.ExistingItems] = GetViewModels();
+            viewData[ViewDataKeys.ExistingItems] = GetViewModels().OrderBy(m => m.Name);
         }
         public override void FillEditViewData(CarTrimViewModel viewModel, ViewDataDictionary viewData)
         {

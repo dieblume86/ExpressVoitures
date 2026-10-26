@@ -14,20 +14,11 @@ namespace ExpressVoitures.Models.Services
         {
         }
 
-        public override List<string> CheckModelErrors(CarMakeViewModel viewModel)
+        public override bool AlreadyExists(CarMakeViewModel viewModel, out string error)
         {
-            var errors = base.CheckModelErrors(viewModel);
+            var normalizedName = viewModel.Name.Trim();
 
-            if (AlreadyExists(viewModel.Name, out string error))
-                errors.Add(error);
-
-            return errors;
-        }
-        public override bool AlreadyExists<T>(T value, out string error)
-        {
-            string normalizedName = value.ToString().Trim();
-
-            bool exists = _entityRepository.GetAll().Any(m =>
+            var exists = _entityRepository.GetAll().Any(m =>
                 m.Name.ToLower() == normalizedName.ToLower());
 
             error = exists ? $"Une marque de voiture avec le nom '{normalizedName}' existe déjà." : string.Empty;

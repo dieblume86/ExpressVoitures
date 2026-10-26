@@ -21,7 +21,7 @@ namespace ExpressVoitures.Models.Services.Interfaces
 
         List<string> CheckModelErrors(ViewModel viewModel);
         List<ValidationResult> CheckProductValidationResult(ViewModel viewModel);
-        bool AlreadyExists<T>(T value, out string error);
+        bool AlreadyExists(ViewModel viewModel, out string error);
 
         void Delete(int id);
     }
