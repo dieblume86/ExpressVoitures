@@ -20,6 +20,18 @@ namespace ExpressVoitures.Models.Services
             _carModelService = carModelService;
         }
 
+        public override bool AlreadyExists(CarTrimViewModel viewModel, out string error)
+        {
+            var normalizedName = viewModel.Name.Trim();
+
+            var exists = _entityRepository.GetAll().Where(m => m.ModelId == viewModel.ModelId).Any(m =>
+                m.Name.ToLower() == normalizedName.ToLower());
+
+            error = exists ? $"Une finition de voiture avec le nom '{normalizedName}' existe déjà." : string.Empty;
+
+            return exists;
+        }
+
         public override void FillViewModel(CarTrimViewModel viewModel)
         {
             base.FillViewModel(viewModel);

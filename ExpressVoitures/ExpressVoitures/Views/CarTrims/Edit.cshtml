@@ -14,9 +14,10 @@
 
 	<div class="mb-3 col-6">
 		<label>Marque:</label>
-		<select id="makeSelect" class="form-select" asp-items="ViewBag.Makes">
+		<select asp-for="Model.MakeId" id="makeSelect" class="form-select" asp-items="ViewBag.Makes">
 			<option value="">-- Choisir --</option>
 		</select>
+		<span asp-validation-for="Model.MakeId" class="text-danger"></span>
 	</div>
 
 	<div class="mb-3 col-6">

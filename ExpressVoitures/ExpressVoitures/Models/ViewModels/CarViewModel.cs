@@ -7,16 +7,16 @@ namespace ExpressVoitures.Models.ViewModels
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "MissingVinCode")]
+        [Required(ErrorMessage = "Un code VIN est requis.")]
         public string VinCode { get; set; }
 
-        [Required(ErrorMessage = "MissingYear")]
+        [Required(ErrorMessage = "Une année est requise.")]
         public int Year { get; set; }
 
         public string? PictureId { get; set; }
         public IFormFile? PictureFile { get; set; }
 
-        [Required(ErrorMessage = "MissingTrimId")]
+        [Required(ErrorMessage = "Une finition est requise.")]
         public int TrimId { get; set; }
 
 
