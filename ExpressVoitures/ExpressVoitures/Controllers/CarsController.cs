@@ -95,25 +95,7 @@ namespace ExpressVoitures.Controllers
                 }
             }
 
-            IEnumerable<string> modelErrors = _service.CheckModelErrors(viewModel);
-
-            foreach (string error in modelErrors)
-            {
-                ModelState.AddModelError("", error);
-            }
-
-            if (ModelState.IsValid)
-            {
-                var carId = _service.Add(viewModel);
-
-                TempData["Success"] = "Success.";
-                return RedirectToAction(nameof(Details), new { id = carId });
-            }
-            else
-            {
-                TempData["Error"] = "Une erreur est survenue.";
-                return RedirectToAction(nameof(Create));
-            }
+            return base.Create(viewModel);
         }
 
         [Authorize]
@@ -223,7 +205,11 @@ namespace ExpressVoitures.Controllers
             }
             else
             {
-                TempData["Error"] = "Une erreur est survenue.";
+                TempData["Error"] = string.Join("<br>",
+                            ModelState.Values
+                                .SelectMany(v => v.Errors)
+                                .Select(e => e.ErrorMessage));
+
                 return RedirectToAction(nameof(Edit), new { id = viewModel.Id });
             }
         }

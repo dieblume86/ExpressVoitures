@@ -26,6 +26,18 @@ namespace ExpressVoitures.Models.Services
             this._carSaleService = carSaleService;
         }
 
+        public override bool AlreadyExists(CarViewModel viewModel, out string error)
+        {
+            var normalizedName = viewModel.VinCode.Trim();
+            
+            var exists = _entityRepository.GetAll().Any(m =>
+                m.VinCode.ToLower() == normalizedName.ToLower() && m.Id != viewModel.Id);
+           
+            error = exists ? $"Une voiture avec le code VIN '{normalizedName}' existe déjà." : string.Empty;
+            
+            return exists;
+        }
+
         public override void FillViewModel(CarViewModel viewModel)
         {
             base.FillViewModel(viewModel);

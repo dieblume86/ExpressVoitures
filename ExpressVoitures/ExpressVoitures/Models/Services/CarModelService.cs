@@ -24,7 +24,7 @@ namespace ExpressVoitures.Models.Services
             var normalizedName = viewModel.Name.Trim();
 
             var exists = _entityRepository.GetAll().Where(m => m.MakeId == viewModel.MakeId).Any(m =>
-                m.Name.ToLower() == normalizedName.ToLower());
+                m.Name.ToLower() == normalizedName.ToLower() && m.Id != viewModel.Id);
 
             error = exists ? $"Un modèle de voiture avec le nom '{normalizedName}' existe déjà." : string.Empty;
 
