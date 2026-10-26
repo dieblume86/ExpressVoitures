@@ -10,7 +10,7 @@ namespace ExpressVoitures.Models.Services
 {
     public class CarMakeService : GenericEntityService<CarMake, CarMakeViewModel>, ICarMakeService
     {
-        public CarMakeService(ICarMakeRepository carMakeRepository, IMapper mapper, IServiceScopeFactory scopeFactory) : base(carMakeRepository, mapper, scopeFactory)
+        public CarMakeService(ICarMakeRepository carMakeRepository, IMapper mapper) : base(carMakeRepository, mapper)
         {
         }
 

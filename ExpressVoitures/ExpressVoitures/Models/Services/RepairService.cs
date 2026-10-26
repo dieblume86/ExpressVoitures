@@ -8,8 +8,11 @@ namespace ExpressVoitures.Models.Services
 {
     public class RepairService : GenericEntityService<Repair, RepairViewModel>, IRepairService
     {
-        public RepairService(IRepairRepository repairRepository, IMapper mapper, IServiceScopeFactory scopeFactory) : base(repairRepository, mapper, scopeFactory)
+        private readonly IServiceScopeFactory _scopeFactory;
+
+        public RepairService(IRepairRepository repairRepository, IMapper mapper, IServiceScopeFactory scopeFactory) : base(repairRepository, mapper)
         {
+            _scopeFactory = scopeFactory;
         }
 
         public override int Add(RepairViewModel viewModel)

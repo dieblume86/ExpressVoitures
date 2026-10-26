@@ -13,13 +13,11 @@ namespace ExpressVoitures.Models.Services
     {
         protected readonly IGenericRepository<Entity> _entityRepository;
         protected readonly IMapper _mapper;
-        protected readonly IServiceScopeFactory _scopeFactory;
 
-        public GenericEntityService(IGenericRepository<Entity> repository, IMapper mapper, IServiceScopeFactory scopeFactory)
+        public GenericEntityService(IGenericRepository<Entity> repository, IMapper mapper)
         {
             _entityRepository = repository;
             _mapper = mapper;
-            _scopeFactory = scopeFactory;
         }
 
 

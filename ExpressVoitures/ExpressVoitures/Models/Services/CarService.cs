@@ -11,8 +11,19 @@ namespace ExpressVoitures.Models.Services
 {
     public class CarService : GenericEntityService<Car, CarViewModel>, ICarService
     {
-        public CarService(ICarRepository carRepository, IMapper mapper, IServiceScopeFactory scopeFactory) : base(carRepository, mapper, scopeFactory)
-        {
+        private readonly ICarTrimService _carTrimService;
+        private readonly ICarMakeService _carMakeService;
+        private readonly ICarModelService _carModelService;
+        private readonly IRepairService _repairService;
+        private readonly ICarSaleService _carSaleService;
+
+        public CarService(ICarRepository carRepository, IMapper mapper, ICarMakeService carMakeService, ICarModelService carModelService, ICarTrimService carTrimService, IRepairService repairService, ICarSaleService carSaleService) : base(carRepository, mapper)
+        {  
+            this._carMakeService = carMakeService;
+            this._carModelService = carModelService;
+            this._carTrimService = carTrimService;
+            this._repairService = repairService;
+            this._carSaleService = carSaleService;
         }
 
         public override void FillViewModel(CarViewModel viewModel)
@@ -22,33 +33,17 @@ namespace ExpressVoitures.Models.Services
             if (viewModel == null)
                 return;
 
-            var trimService = _scopeFactory.CreateScope().ServiceProvider.GetService(typeof(ICarTrimService)) as ICarTrimService;
-            if (trimService == null)
-                return;
-
-            var modelService = _scopeFactory.CreateScope().ServiceProvider.GetService(typeof(ICarModelService)) as ICarModelService;
-            if (modelService == null)
-                return;
-
-            var makeService = _scopeFactory.CreateScope().ServiceProvider.GetService(typeof(ICarMakeService)) as ICarMakeService;
-            if (makeService == null)
-                return;
-
-            var saleService = _scopeFactory.CreateScope().ServiceProvider.GetService(typeof(ICarSaleService)) as ICarSaleService;
-            if (saleService == null)
-                return;
-
-            viewModel.Trim = trimService.GetViewModel(viewModel.TrimId);
+            viewModel.Trim = _carTrimService.GetViewModel(viewModel.TrimId);
             if (viewModel.Trim != null)
             {
-                viewModel.Trim.Model = modelService.GetViewModel(viewModel.Trim.ModelId);
+                viewModel.Trim.Model = _carModelService.GetViewModel(viewModel.Trim.ModelId);
                 if (viewModel.Trim.Model != null)
                 {
-                    viewModel.Trim.Model.Make = makeService.GetViewModel(viewModel.Trim.Model.MakeId);
+                    viewModel.Trim.Model.Make = _carMakeService.GetViewModel(viewModel.Trim.Model.MakeId);
                 }
             }
 
-            viewModel.Sale = saleService.GetViewModels().FirstOrDefault(s => s.CarId == viewModel.Id);
+            viewModel.Sale = _carSaleService.GetViewModels().FirstOrDefault(s => s.CarId == viewModel.Id);
         }
         public override void FillCreateViewData(ViewDataDictionary viewData)
         {
@@ -59,69 +54,43 @@ namespace ExpressVoitures.Models.Services
                 .ThenBy(m => m.Trim?.Name)
                 .ToList();
 
-            var makeService = _scopeFactory.CreateScope().ServiceProvider.GetService(typeof(ICarMakeService)) as ICarMakeService;
-            if (makeService == null)
-                return;
-            var modelService = _scopeFactory.CreateScope().ServiceProvider.GetService(typeof(ICarModelService)) as ICarModelService;
-            if (modelService == null)
-                return;
-            var trimService = _scopeFactory.CreateScope().ServiceProvider.GetService(typeof(ICarTrimService)) as ICarTrimService;
-            if (trimService == null)
-                return;
-
-            var makes = makeService.GetViewModels().OrderBy(m => m.Name);
+            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name);
             viewData[ViewDataKeys.Makes] = new SelectList(makes, "Id", "Name");
 
-            var models = modelService.GetViewModels().OrderBy(m => m.Name);
+            var models = _carModelService.GetViewModels().OrderBy(m => m.Name);
             viewData[ViewDataKeys.Models] = new SelectList(Enumerable.Empty<object>(), "Id", "Name");
 
-            var trims = trimService.GetViewModels().OrderBy(m => m.Name);
+            var trims = _carTrimService.GetViewModels().OrderBy(m => m.Name);
             viewData[ViewDataKeys.Trims] = new SelectList(Enumerable.Empty<object>(), "Id", "Name");
         }
         public override void FillEditViewData(CarViewModel viewModel, ViewDataDictionary viewData)
         {
             base.FillEditViewData(viewModel, viewData);
 
-            var makeService = _scopeFactory.CreateScope().ServiceProvider.GetService(typeof(ICarMakeService)) as ICarMakeService;
-            if (makeService == null)
-                return;
-            var modelService = _scopeFactory.CreateScope().ServiceProvider.GetService(typeof(ICarModelService)) as ICarModelService;
-            if (modelService == null)
-                return;
-            var trimService = _scopeFactory.CreateScope().ServiceProvider.GetService(typeof(ICarTrimService)) as ICarTrimService;
-            if (trimService == null)
-                return;
-            var repairService = _scopeFactory.CreateScope().ServiceProvider.GetService(typeof(IRepairService)) as IRepairService;
-            if (repairService == null)
-                return;
-            var saleService = _scopeFactory.CreateScope().ServiceProvider.GetService(typeof(ICarSaleService)) as ICarSaleService;
-            if (saleService == null)
-                return;
-
             var selectedMakeId = viewModel.Trim?.Model?.MakeId ?? 0;
-            var makes = makeService.GetViewModels().OrderBy(m => m.Name).ToList();
+            var makes = _carMakeService.GetViewModels().OrderBy(m => m.Name).ToList();
             viewData[ViewDataKeys.Makes] = new SelectList(makes, "Id", "Name", selectedMakeId);
 
-            var models = modelService.GetViewModels()
+            var models = _carModelService.GetViewModels()
                 .Where(m => m.MakeId == selectedMakeId)
                 .OrderBy(m => m.Name)
                 .ToList();
             viewData[ViewDataKeys.Models] = new SelectList(models, "Id", "Name", viewModel?.Trim?.ModelId);
 
             var selectedTrimId = viewModel?.Trim?.Model?.MakeId ?? 0;
-            var trims = trimService.GetViewModels()
+            var trims = _carTrimService.GetViewModels()
                 .Where(m => m.ModelId == viewModel?.Trim?.ModelId)
                 .OrderBy(m => m.Name)
                 .ToList();
             viewData[ViewDataKeys.Trims] = new SelectList(trims, "Id", "Name", viewModel?.TrimId);
 
-            var repairs = repairService.GetViewModels()
+            var repairs = _repairService.GetViewModels()
                 .Where(r => r.CarId == viewModel?.Id)
                 .OrderBy(r => r.Description)
                 .ToList();
             viewData[ViewDataKeys.Repairs] = repairs;
 
-            var sale = saleService.GetViewModels()
+            var sale = _carSaleService.GetViewModels()
                 .FirstOrDefault(r => r.CarId == viewModel?.Id);
             viewData[ViewDataKeys.Sales] = sale;
         }
