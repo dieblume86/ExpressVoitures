@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ExpressVoitures.Models.Services.Interfaces
 {
-    public interface IGenericEntityService<Entity,ViewModel> 
-        where Entity : class 
+    public interface IGenericEntityService<Entity, ViewModel>
+        where Entity : class
         where ViewModel : class
     {
         Entity GetEntity(int id);
@@ -21,6 +21,7 @@ namespace ExpressVoitures.Models.Services.Interfaces
 
         List<string> CheckModelErrors(ViewModel viewModel);
         List<ValidationResult> CheckProductValidationResult(ViewModel viewModel);
+        bool AlreadyExists<T>(T value, out string error);
 
         void Delete(int id);
     }

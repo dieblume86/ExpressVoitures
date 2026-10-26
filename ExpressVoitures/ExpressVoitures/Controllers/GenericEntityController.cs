@@ -39,8 +39,6 @@ namespace ExpressVoitures.Controllers
         [HttpPost]
         public virtual IActionResult Create(TViewModel viewModel)
         {
-            //TODO trim name already exists for the same model and return an error message if so
-
             IEnumerable<string> modelErrors = _service.CheckModelErrors(viewModel);
 
             foreach (string error in modelErrors)
@@ -52,12 +50,16 @@ namespace ExpressVoitures.Controllers
             {
                 _service.Add(viewModel);
 
-                TempData["Success"] = "Success.";
+                TempData["Success"] = "Succès.";
                 return RedirectToAction(nameof(Create));
             }
             else
             {
-                TempData["Error"] = "Une erreur est survenue.";
+                TempData["Error"] = string.Join("<br>",
+                            ModelState.Values
+                                .SelectMany(v => v.Errors)
+                                .Select(e => e.ErrorMessage));
+
                 return RedirectToAction(nameof(Create));
             }
         }
@@ -80,9 +82,21 @@ namespace ExpressVoitures.Controllers
         [ValidateAntiForgeryToken]
         public virtual IActionResult Edit(TViewModel viewModel)
         {
+            IEnumerable<string> modelErrors = _service.CheckModelErrors(viewModel);
+
+            foreach (string error in modelErrors)
+            {
+                ModelState.AddModelError("", error);
+            }
+
             if (!ModelState.IsValid)
             {
-               _service.FillEditViewData(viewModel, ViewData);
+                TempData["Error"] = string.Join("<br>",
+                        ModelState.Values
+                            .SelectMany(v => v.Errors)
+                            .Select(e => e.ErrorMessage));
+
+                _service.FillEditViewData(viewModel, ViewData);
                 return View(viewModel);
             }
 

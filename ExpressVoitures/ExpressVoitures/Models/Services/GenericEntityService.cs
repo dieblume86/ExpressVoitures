@@ -34,7 +34,7 @@ namespace ExpressVoitures.Models.Services
         {
             var viewModel = AutoMapToViewModel(GetEntity(id));
 
-            if(viewModel == null)
+            if (viewModel == null)
                 return new ViewModel();
 
             FillViewModel(viewModel);
@@ -103,6 +103,9 @@ namespace ExpressVoitures.Models.Services
 
             CheckProductValidationResult(viewModel).ForEach(vr => modelErrors.Add(vr.ErrorMessage));
 
+            if (AlreadyExists(viewModel, out string error))
+                modelErrors.Add(error);
+
             return modelErrors;
         }
         public virtual List<ValidationResult> CheckProductValidationResult(ViewModel viewModel)
@@ -113,6 +116,11 @@ namespace ExpressVoitures.Models.Services
             Validator.TryValidateObject(viewModel, context, results, true);
 
             return results;
+        }
+        public virtual bool AlreadyExists<T>(T value, out string error)
+        {
+            error = string.Empty;
+            return false;
         }
 
         public virtual void Delete(int id)
