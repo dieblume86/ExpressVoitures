@@ -1,13 +1,12 @@
-﻿@using ExpressVoitures.Helpers 
+﻿@using ExpressVoitures.Helpers
 @model ExpressVoitures.Models.ViewModels.CarMakeViewModel
 
 @{
 	ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Nouvelle marque de voiture</h1>
 
-<h4>CarMake</h4>
 <hr />
 
 @await Html.PartialAsync("_ErrorCreateDelete")
@@ -35,14 +34,14 @@
 			<div class="row border-top py-2">
 				<div class="col-8">
 					<span>@item.Name</span>
-				</div>		
+				</div>
 				<div class="col-4">
 					<form id="@item.Id" asp-action="Delete" asp-controller="CarMakes" method="post">
 						<input type="hidden" name="id" value="@item.Id" />
-						<button type="submit" class="btn btn-danger">"Delete"</button>
-					</form>
+						<button type="submit" class="btn btn-danger">Supprimer</button>
 
-					<a asp-action="Edit" asp-controller="CarMakes" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Éditer</a>
+						<a asp-action="Edit" asp-controller="CarMakes" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Éditer</a>
+					</form>
 				</div>
 			</div>
 		}

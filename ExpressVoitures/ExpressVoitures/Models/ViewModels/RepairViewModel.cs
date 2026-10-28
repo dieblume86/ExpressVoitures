@@ -7,13 +7,13 @@ namespace ExpressVoitures.Models.ViewModels
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "MissingDescription")]
+        [Required(ErrorMessage = "Description requise")]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "MissingRepairCost")]
+        [Required(ErrorMessage = "Coût de la réparation requis")]
         public float RepairCost { get; set; }
 
-        [Required(ErrorMessage = "MissingCarId")]
+        [Required(ErrorMessage = "Identifiant de la voiture requis")]
         public int CarId { get; set; }
 
 

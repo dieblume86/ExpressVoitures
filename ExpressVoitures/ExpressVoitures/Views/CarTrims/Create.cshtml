@@ -5,9 +5,8 @@
 	ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Nouvelle finition de voiture</h1>
 
-<h4>CarTrim</h4>
 <hr />
 
 @await Html.PartialAsync("_ErrorCreateDelete")
@@ -30,7 +29,7 @@
 	</div>
 
 	<div class="mb-3 col-6">
-		<label>Nom Trim:</label>
+		<label>Nom:</label>
 		<input asp-for="Name" class="form-control" />
 		<span asp-validation-for="Name" class="text-danger"></span>
 	</div>
@@ -43,7 +42,7 @@
 @{
 	var items = ViewData[ViewDataKeys.ExistingItems] as IEnumerable<ExpressVoitures.Models.ViewModels.CarTrimViewModel>;
 
-	<h4>Trims existants</h4>
+	<h4>Finitions existantes</h4>
 
 	if (items != null && items.Any())
 	{
@@ -58,7 +57,7 @@
 				<span>Finition</span>
 			</div>
 			<div class="col-3">
-				<span>Supprimer</span>
+				<span>Actions</span>
 			</div>
 		</div>
 		@foreach (var item in items)
@@ -82,7 +81,7 @@
 				<div class="col-3">
 					<form id="@item.Id" asp-action="Delete" asp-controller="CarTrims" method="post">
 						<input type="hidden" name="id" value="@item.Id" />
-						<button type="submit" class="btn btn-danger">Delete</button>
+						<button type="submit" class="btn btn-danger">Supprimer</button>
 
 						<a asp-action="Edit" asp-controller="CarTrims" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Éditer</a>
 					</form>

@@ -5,9 +5,8 @@
 	ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Nouveau modèle de voiture</h1>
 
-<h4>CarModel</h4>
 <hr />
 
 @await Html.PartialAsync("_ErrorCreateDelete")
@@ -46,7 +45,7 @@
 				<span>Modèle</span>
 			</div>
 			<div class="col-4">
-				<span>Supprimer</span>
+				<span>Actions</span>
 			</div>
 		</div>
 		@foreach (var item in items)
@@ -64,7 +63,7 @@
 				<div class="col-4">
 					<form id="@item.Id" asp-action="Delete" asp-controller="CarModels" method="post">
 						<input type="hidden" name="id" value="@item.Id" />
-						<button type="submit" class="btn btn-danger">Delete</button>	
+						<button type="submit" class="btn btn-danger">Supprimer</button>	
 						
 						<a asp-action="Edit" asp-controller="CarModels" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Éditer</a>
 					</form>

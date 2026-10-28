@@ -43,7 +43,7 @@ namespace ExpressVoitures.Controllers
             if (ModelState.IsValid)
             {
                 _service.Add(viewModel);
-                TempData["Success"] = "Success.";
+                TempData["Success"] = "Succès.";
                 return RedirectToAction("Edit", "Cars", new { id = viewModel.CarId });
             }
             else

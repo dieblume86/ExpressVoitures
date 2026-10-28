@@ -8,7 +8,7 @@
 	var pictureUrl = string.IsNullOrEmpty(Model?.PictureId) ? placeholder : Url.Action("GetPicture", "Cars", new { pictureId = Model.PictureId });
 }
 
-<div><p>Créer une nouvelle voiture</p></div>
+<h1>Nouvelle voiture</h1>
 
 @await Html.PartialAsync("_ErrorCreateDelete")
 
@@ -51,7 +51,7 @@
 		</div>
 	</div>
 	<div class="mb-3 col-6">
-		<label>VIN code:</label>
+		<label>Code VIN:</label>
 		<input asp-for="VinCode" class="form-control" />
 		<span asp-validation-for="VinCode" class="text-danger"></span>
 	</div>
@@ -89,7 +89,7 @@
 	{
 		<div class="row">
 			<div class="col-1">
-				<span>VIN code</span>
+				<span>Code VIN</span>
 			</div>
 			<div class="col-1">
 				<span>Année</span>
@@ -104,10 +104,10 @@
 				<span>Finition</span>
 			</div>
 			<div class="col-2">
-				<span>Picture</span>
+				<span>Photo</span>
 			</div>
 			<div class="col-2">
-				<span>Supprimer</span>
+				<span>Actions</span>
 			</div>
 		</div>
 		@foreach (var item in items)
@@ -145,7 +145,7 @@
 				<div class="col-2">
 					<form id="@item.Id" asp-action="Delete" asp-controller="Cars" method="post">
 						<input type="hidden" name="id" value="@item.Id" />
-						<button type="submit" class="btn btn-danger">Delete</button>
+						<button type="submit" class="btn btn-danger">Supprimer</button>
 
 						<a asp-action="Edit" asp-controller="Cars" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Éditer</a>
 					</form>

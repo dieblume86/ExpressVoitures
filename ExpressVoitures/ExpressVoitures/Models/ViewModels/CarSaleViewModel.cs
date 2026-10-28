@@ -5,14 +5,12 @@ namespace ExpressVoitures.Models.ViewModels
 {
     public class CarSaleViewModel
     {
-        private const string _missing = "Missing";
-
         public int Id { get; set; }
 
-        [Required(ErrorMessage = $"{_missing}{nameof(PurchaseDate)}")]
+        [Required(ErrorMessage = "Date d'achat requis")]
         public DateTimeOffset PurchaseDate { get; set; }
 
-        [Required(ErrorMessage = $"{_missing}{nameof(PurchasePrice)}")]
+        [Required(ErrorMessage = "Prix d'achat requis")]
         public float PurchasePrice { get; set; }
 
         public DateTimeOffset? AvailableForSaleDate { get; set; }
@@ -22,7 +20,7 @@ namespace ExpressVoitures.Models.ViewModels
         public DateTimeOffset? SaleDate { get; set; }
 
 
-        [Required(ErrorMessage = $"{_missing}{nameof(CarId)}")]
+        [Required(ErrorMessage = "Identifiant de la voiture requis")]
         public int CarId { get; set; }
 
 
